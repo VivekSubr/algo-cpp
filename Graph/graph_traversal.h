@@ -72,7 +72,8 @@ std::vector<int> dfs(const Graph& graph, int startNode)
     return dfs_node_visited_arr;
 }
 
-bool do_hasCycle(const Graph& graph, std::unordered_set<int>& set_visited)
+
+bool do_hasCycle(const Graph& graph,std::unordered_set<int>& set_visiting, std::unordered_set<int>& set_visited, int node)
 {
     //visit all neighbors 
     for(int j=0; j<graph.getNumberNodes(); j++)
@@ -81,21 +82,43 @@ bool do_hasCycle(const Graph& graph, std::unordered_set<int>& set_visited)
             continue; //no path from node to j
         }
 
-        if(set_visited.find(j) == set_visited.end())
+        if(set_visited.find(node) != set_visited.end())
         {
-            set_visited.insert(j);
-            do_dfs(graph, set_visited, arr_visited, j);
+            return false; //This node already tranversed, black node
         }
-        else return true;
+        else if(set_visiting.find(node) != set_visiting.end()) 
+        {
+            return true; //found this node in set of grey nodes, ie cycle detected
+        }
+        else
+        { 
+            set_visiting.insert(j);
+            if(do_hasCycle(graph, set_visited, set_visiting, j)) {
+                return true;
+            }
+            
+            //This recursive call has exited, that means all descendants of j have been visisted... hence remove from 
+            //visiting and insert in visisted, ie mark j 'black' from 'grey'
+            set_visiting.erase(j);
+            set_visited.insert(j);
+        }
     }
 
     return false;
 }
 
+//White-Grey-Black Cycle Detection
+//Cycle is when a node has a 'back-edge' to a previous visisted node is DFS
+//white: unexplored
+//grey: visiting(during recursively visiting its descendants)
+//black: visited(all of its descendants have been visited)
+//Cycle is thus, when a grey node has a descendant that is grey.
 bool hasCycle(const Graph& graph)
 {
-    std::unordered_set<int> set_visited; //a set of visited nodes
+    std::unordered_set<int> set_visisted;  //Black nodes
+    std::unordered_set<int> set_visisting; //Grey  nodes
+    //Nodes not in these no sets are white
 
-    return do_hasCycle(graph, set_visited);
+    return do_hasCycle(graph, set_visisting, set_visisted, 0);
 }
 

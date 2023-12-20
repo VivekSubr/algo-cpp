@@ -50,6 +50,12 @@ TEST_F(TestGraph, inDegree)
 
 TEST_F(TestGraph, HasCycle)
 {
+    //Cycle here, 0 -> 2 -> 0
+   // Graph g(4, true, { {0, 1, 1}, {0, 2, 1}, {1, 2, 1}, {2, 3, 1}, {2, 0, 1} });
+   // ASSERT_TRUE(hasCycle(g));
+
+    Graph g2(4, true, { {0, 1, 1}, {0, 2, 1}, {1, 2, 1}, {2, 3, 1} });
+    ASSERT_FALSE(hasCycle(g2));
 }
 
 TEST_F(TestGraph, TopologicalSort)
