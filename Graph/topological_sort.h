@@ -13,7 +13,7 @@
 //Find nodes with indegree 0 and insert into order
 //Repeat till done
 
-std::vector<int> topologicalSort(Graph& graph)
+std::vector<int> topologicalSort(Graph* graph)
 {
     std::vector<int>        ret;
     std::unordered_set<int> visited_set;
@@ -21,16 +21,16 @@ std::vector<int> topologicalSort(Graph& graph)
         return ret;
     }
     
-    size_t nNodes = graph.getNumberNodes();
+    size_t nNodes = graph->getNumberNodes();
     while(ret.size() < nNodes) 
     {
         for(size_t node=0; node<nNodes; node++)
         {
-            if((visited_set.find(node) == visited_set.end()) && (graph.inDegree(node) == 0))
+            if((visited_set.find(node) == visited_set.end()) && (graph->inDegree(node) == 0))
             {
                 ret.push_back(node);
                 visited_set.insert(node);
-                graph.deleteNode(node);
+                graph->deleteNode(node);
                 break;
             }
         }
@@ -38,3 +38,5 @@ std::vector<int> topologicalSort(Graph& graph)
 
     return ret;
 }
+
+//neetcode - https://www.youtube.com/watch?v=6kTZYvNNyps
