@@ -84,7 +84,6 @@ public:
             m_adjMatrix[node][i] = 0;
             m_adjMatrix[i][node] = 0;
         }
-
     }
 
     int getNumberNodes() const  { return m_nNodes; }

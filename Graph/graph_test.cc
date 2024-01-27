@@ -137,6 +137,7 @@ TEST_F(TestGraph, MinimalSpanningTree)
 
     auto MST = primMST(&g);
     ASSERT_EQ(MST.weight, 37);
+    ASSERT_TRUE(isConnected(MST.mst));
 }
 
 TEST_F(TestGraph, CountConnectedComponents)

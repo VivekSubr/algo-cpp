@@ -73,3 +73,8 @@ private:
     } 
 };
 
+bool isConnected(std::shared_ptr<Graph> graph)
+{
+    DisjointSet ds(graph);
+    return ds.count_connected_components() == 1;
+}
