@@ -1,5 +1,6 @@
 #pragma once
 #include "binary_tree.h"
+#include <algorithm>
 
 enum class heapType 
 {

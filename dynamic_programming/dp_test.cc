@@ -1,5 +1,8 @@
 #include "nqueen.h"
 #include "dp_test.h"
+#include "edit_distance.h"
+#include "jump_game.h"
+#include "max_subarray.h"
 
 TEST_F(TestDP, NQueen)
 {
@@ -59,4 +62,25 @@ TEST_F(TestDP, NQueen)
 
 	ASSERT_EQ(nQueen, 3);
 	ASSERT_FALSE(checkIfKill(matrix));
+}
+
+TEST_F(TestDP, EditDistance)
+{
+	ASSERT_EQ(levenshtein_distance("horse", "ros"), 3);
+	ASSERT_EQ(levenshtein_distance("ros", "horse"), 3);
+
+	ASSERT_EQ(levenshtein_distance("intention", "execution"), 9);
+
+	auto edit_dis = edit_distance("horse", "ros");
+	ASSERT_EQ(edit_dis.first, 3);
+	printVector(edit_dis.second);
+}
+
+TEST_F(TestDP, JumpGame)
+{
+    //ASSERT_TRUE(JumpGame::canJump({2,3,1,1,4}));
+	//ASSERT_FALSE(JumpGame::canJump({3,2,1,0,4}));
+
+	//ASSERT_EQ(JumpGame::minJumps({2,3,1,1,4}), 2);
+	ASSERT_EQ(JumpGame::minJumps({2,3,0,1,4}), 2);
 }
