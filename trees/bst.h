@@ -23,9 +23,9 @@ public:
         return traverse_insert(node, 0);
     }
 
-    void del(std::shared_ptr<T> node)
+    bool del(std::shared_ptr<T> node)
     {
-
+        return traverse_delete(node, 0);
     }
 
     int has(std::shared_ptr<T> node)
@@ -34,13 +34,15 @@ public:
     }
 
 private:
+    /*
+       Here, we are traversing the BST from root to the point where new node can be inserted. 
+       If this insertion is displacing an existing node, the subtree at that point needs to be *rebalanced*
+    */
     int traverse_insert(std::shared_ptr<T> new_node, int cur_index)
     {
         auto node  = getAt(cur_index);
         auto left  = getLeftChild(cur_index);
         auto right = getRightChild(cur_index);
-
-        std::cout<<"left "<<*left.second<<" right "<<*right.second<<"\n";
 
         if(node == nullptr)
         { //insert here
@@ -49,7 +51,7 @@ private:
         }
 
         if(*new_node < *node)
-        {
+        {//go left
             if(left.first < 0) 
             { //null, hence insert here
                 m_tree[left.first] = new_node;
@@ -66,7 +68,7 @@ private:
                 return left.first;
             } 
         }
-        else 
+        else //go right
         {
             if(right.first < 0) 
             {
@@ -86,6 +88,25 @@ private:
         }
     }
 
+    bool traverse_delete(std::shared_ptr<T> del_node, int cur_index)
+    {
+        auto node  = getAt(cur_index);
+        auto left  = getLeftChild(cur_index);
+        auto right = getRightChild(cur_index);
+
+        if(node == nullptr) return false;
+
+        if(*del_node == *node)
+        { 
+            rebalance(cur_index);
+            return true;
+        }
+
+    }
+
+    /*
+        Rebalancing after insertion.
+    */
     void rebalance(std::shared_ptr<T> new_node, int index)
     {
         auto old_node =  m_tree.at(index);
@@ -115,6 +136,14 @@ private:
         }
     }
 
+    /*
+        Rebalance after deletion.
+    */
+    void rebalance(int index)
+    {
+
+    }
+
     bool checkIfValid()
     {
         std::deque<int> Q;
@@ -129,18 +158,31 @@ private:
             auto left = getLeftChild(node);
             if(left.second)
             {
-                if(node_val < *left.second) return false;
+                if(node_val < *left.second) return not_valid_error(node_val, *left.second);
                 Q.push_back(left.first);
             }
 
             auto right = getRightChild(node);
             if(right.second)
             {
-                if(node_val > *right.second) return false;
+                if(node_val > *right.second) return not_valid_error(node_val, *right.second);
                 Q.push_back(right.first);
+            }
+
+            if(left.second && right.second && *left.second > *right.second)
+            {
+                return not_valid_error(*left.second, *right.second);
             }
         }
 
         return true;
+    }
+
+    bool not_valid_error(T first, T second)
+    {
+        std::cout<<first<<" and "<<second<<" not in correct order\n"; 
+        this->printTree();
+        std::cout<<"\n";
+        return false;
     }
 };

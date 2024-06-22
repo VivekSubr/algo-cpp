@@ -39,7 +39,7 @@ private:
 
     static int jump(const std::vector<int>& nums, size_t index, int count)
     {
-        if(index >= nums.size())     return -1; 
+        if(index >= nums.size())     return -1; \
         if(index == nums.size() - 1) return count;
 
         int can_jump = nums[index];

@@ -1,6 +1,8 @@
 #include "tree_traversal.h"
-#include "bst.h"
-#include "heap.h"
+#define private public
+    #include "bst.h"   
+    #include "heap.h"
+#undef private
 #include "tree_test.h"
 #include <gmock/gmock-matchers.h>
 using namespace testing;
@@ -9,8 +11,7 @@ using namespace testing;
 
 TEST_F(TestTree, BinaryTree)
 {
-    BinaryTree<int> tree({make_int(1), make_int(2), make_int(3), make_int(4), make_int(5), make_int(6), make_int(7), 
-                          make_int(8), nullptr, nullptr, nullptr, make_int(9), make_int(10)});
+    BinaryTree<int> tree(arr2pts({1, 2, 3, 4, 5, 6, 7, 8, -1, -1, -1, 9, 10}));
     tree.printTree();
     
     //              1
@@ -85,6 +86,7 @@ TEST_F(TestTree, BST)
 
     std::cout<<"***************\n";
     bst.insert(make_int(2));
+    ASSERT_TRUE(bst.checkIfValid());
     bst.printTree();
 }
 

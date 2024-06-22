@@ -67,7 +67,7 @@ public:
 
     std::pair<int, std::shared_ptr<T>> getParent(int index) const
     {
-        int parent_index = (index - 1)/2;
+        int parent_index = std::floor((index - 1)/2);
         if(parent_index < 0) 
         {
             return {-1, nullptr};
@@ -77,6 +77,9 @@ public:
     }
 
     std::size_t getMaxIndex() const { return m_tree.size() - 1; }
+
+    //Basically, second half of array will all be leaf nodes.
+    std::size_t getLastNonLeafIndex() const { return m_tree.size()/2 - 1; }
 
     void printTree() 
     {
@@ -95,6 +98,8 @@ public:
             if(m_tree[i]) std::cout<<*m_tree[i];
             else          std::cout<<"null";
         }
+
+        std::cout<<"\n";
     }
 
     int getNumberLevels()
@@ -118,5 +123,10 @@ protected:
     int getRightChildIndex(int index) const
     {
         return 2 * index + 2;
+    }
+
+    int getParentIndex(int index) const 
+    {
+        return std::floor(index/2);
     }
 };
