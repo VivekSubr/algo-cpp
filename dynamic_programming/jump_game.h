@@ -39,7 +39,7 @@ private:
 
     static int jump(const std::vector<int>& nums, size_t index, int count)
     {
-        if(index >= nums.size())     return -1; \
+        if(index >= nums.size())     return -1; 
         if(index == nums.size() - 1) return count;
 
         int can_jump = nums[index];
@@ -48,7 +48,8 @@ private:
         std::vector<int> jumps;
         for(int i=1; i<=can_jump; i++)
         {
-            jumps.push_back(jump(nums, index + i, count + 1));
+            int j = jump(nums, index + i, count + 1);
+            if(j > 0) jumps.push_back(j);
         }
 
         return *std::min_element(jumps.begin(), jumps.end());

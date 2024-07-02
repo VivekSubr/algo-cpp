@@ -1,7 +1,7 @@
 #pragma once 
 #include <vector>
-#include <set>
 #include <algorithm>
+#include <iostream>
 
 //https://leetcode.com/problems/combination-sum/description/
 
@@ -19,13 +19,16 @@ public:
         return ret;
     }
 
+    //Each solution must be unique, ie can't have solutions which are just other combination of exisiting solution.
     static std::vector<std::vector<int>> findSumUnique(std::vector<int>& candidates, int target)
     {
         std::vector<std::vector<int>> ret;
-        std::set<int> combination;
+        std::vector<int> combination;
         std::cout<<"Trying to find combination sum "<<target<<" candidates size "<<candidates.size()<<"\n";
         
-        do_findSumUnique(candidates, combination, ret, 0, 0, target);
+        do_findSum(candidates, combination, ret, 0, 0, target);
+        
+        filter_non_unique(ret);
         return ret;
     }
 
@@ -34,9 +37,9 @@ private:
                             std::vector<std::vector<int>>& ret, 
                             int cur_index, int sum, int target)
     {
-        std::cout<<"do_findSum "<<cur_index<<" "<<sum<<" "<<target<<"\n";
+        //std::cout<<"do_findSum "<<cur_index<<" "<<sum<<" "<<target<<"\n";
         if(sum > target) {
-            std::cout<<"Failed to find "<<cur_index<<"\n";
+            //std::cout<<"Failed to find "<<cur_index<<"\n";
             return false;
         }
 
@@ -65,42 +68,21 @@ private:
         return false;
     }
 
-    static bool do_findSumUnique(const std::vector<int>& candidates, std::set<int>& combination, 
-                            std::vector<std::vector<int>>& ret, 
-                            int cur_index, int sum, int target)
-    {
-        std::cout<<"do_findSumUnique "<<cur_index<<" "<<sum<<" "<<target<<"\n";
-        if(sum > target) {
-            std::cout<<"Failed to find "<<cur_index<<"\n";
-            return false;
-        }
-
-        if(sum == target) 
+    static void filter_non_unique(std::vector<std::vector<int>>& combinations)
+    { //Here, filter out elements which are simply combinations of each other.
+      
+      for(int i=0; i<combinations.size(); i++)
+      {
+        for(int j=0; j<combinations.size(); j++)
         {
-            std::vector<int> temp;
-            std::cout<<"Found! { ";
-            for(auto it : combination) { 
-                temp.push_back(it);
-                std::cout<<it<<" ";
+            if(i == j) continue;
+
+            if(combinations[i].size() == combinations[j].size())
+            {
+
             }
-            std::cout<<"}\n";
 
-            ret.emplace_back(temp);
-            return true;
         }
-
-        for(size_t i=cur_index; i<candidates.size(); i++)
-        {
-            combination.insert(candidates[i]);
-            sum += candidates[i];
-
-            do_findSumUnique(candidates, combination, ret, i+1, sum, target);
-
-            //backtrack!
-            combination.erase(candidates[i]); 
-            sum-=candidates[i];
-        }
-
-        return false;
+      }
     }
 };

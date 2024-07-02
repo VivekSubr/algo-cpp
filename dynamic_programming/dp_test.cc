@@ -3,6 +3,7 @@
 #include "edit_distance.h"
 #include "jump_game.h"
 #include "max_subarray.h"
+#include "best_time_sell_stock.h"
 
 TEST_F(TestDP, NQueen)
 {
@@ -78,9 +79,18 @@ TEST_F(TestDP, EditDistance)
 
 TEST_F(TestDP, JumpGame)
 {
-    //ASSERT_TRUE(JumpGame::canJump({2,3,1,1,4}));
-	//ASSERT_FALSE(JumpGame::canJump({3,2,1,0,4}));
+    ASSERT_TRUE(JumpGame::canJump({2,3,1,1,4}));
+	ASSERT_FALSE(JumpGame::canJump({3,2,1,0,4}));
 
-	//ASSERT_EQ(JumpGame::minJumps({2,3,1,1,4}), 2);
+	ASSERT_EQ(JumpGame::minJumps({2,3,1,1,4}), 2);
 	ASSERT_EQ(JumpGame::minJumps({2,3,0,1,4}), 2);
+}
+
+TEST_F(TestDP, BestTimeSellStock)
+{
+	ASSERT_EQ(BestTimeSell::maxProfit({7,1,5,3,6,4}), 5);
+
+	ASSERT_EQ(BestTimeSell::maxProfit2({7,1,5,3,6,4}),  7);
+	ASSERT_EQ(BestTimeSell::maxProfit2({1,2,3,4,5}),    4);
+	ASSERT_EQ(BestTimeSell::maxProfit2({7,6,4,3,1}),    0);
 }

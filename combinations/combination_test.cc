@@ -1,6 +1,7 @@
 #include "combinations_test.h"
 #include "combinations.h"
 #include "combinations_sum.h"
+#include "catalan_numbers.h"
 
 TEST_F(TestCombinations, GetCombinations)
 {
@@ -31,4 +32,12 @@ TEST_F(TestCombinations, CombinationSum)
     std::vector<int> problem3{10,1,2,7,6,1,5};
     sol = CombinationSum::findSumUnique(problem3, 8);
     ASSERT_EQ(sol.size(), 4);
+}
+
+TEST_F(TestCombinations, UniqueBinaryTrees)
+{
+    ASSERT_EQ(get_nth_catalan(3), 5);
+
+    auto trees = UniqBinaryTrees::uniqueBinaryTrees(3);
+    ASSERT_EQ(trees.size(), 5);
 }
