@@ -1,6 +1,9 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <deque>
+#include <stdexcept>
+#include <cmath>
 
 struct treeNode 
 {
@@ -21,7 +24,7 @@ public:
     {
         if(treeArr.size() > 1)
         {
-            if(treeArr == -1) throw std::runtime_error("root can't be null!");
+            if(treeArr[0] == -1) throw std::runtime_error("root can't be null!");
 
             m_root = std::make_shared<treeNode>(treeArr[0]);
 
@@ -59,3 +62,50 @@ private:
         }
     }
 };
+
+std::shared_ptr<treeNode> do_createBST(const std::vector<int>& arr, int start, int end)
+{
+    if(start > end) return nullptr;
+
+    //Since array is sorted, and all elements to left of a node must be smaller, and right larger in a BST... 
+    //we must pivot around midpoint of array.
+    int mid = std::floor((start + end)/2);
+
+    auto node = std::make_shared<treeNode>(arr[mid]);
+    if(start == end) return node;
+
+    node->left  = do_createBST(arr, 0, mid-1);
+    node->right = do_createBST(arr, mid+1, end);
+    return node;
+}
+
+//leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+std::shared_ptr<treeNode> createBST(const std::vector<int>& arr)
+{
+    return do_createBST(arr, 0, arr.size() - 1);
+}
+
+//do a level order traversal and check if conditions are satisfied in each level
+bool isValidBST(std::shared_ptr<treeNode> root)
+{
+    std::deque<std::shared_ptr<treeNode>> Q;
+    Q.push_back(root);
+    while(!Q.empty())
+    {
+        auto node = Q.front(); Q.pop_front();
+
+        if(node->left)
+        {
+            if(node->left->val > node->val) return false;
+            Q.push_back(node->left);
+        }
+
+        if(node->right)
+        {
+            if(node->left->val < node->val) return false;
+            Q.push_back(node->left);
+        }
+    }
+
+    return true;
+}

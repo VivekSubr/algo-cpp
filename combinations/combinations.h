@@ -42,6 +42,18 @@ public:
         return ret;
     }
 
+    std::vector<std::vector<T>> getPermutations(const std::vector<T>& arr)
+    {
+        std::vector<std::vector<T>> ret;
+      
+        do 
+        {
+            ret.push_back(arr);
+        } while(std::next_permutation(arr.begin(), arr.end()));
+      
+        return ret;
+    }
+
 private:
     std::vector<T> m_elements;
 };

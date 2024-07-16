@@ -4,6 +4,27 @@
 #include "jump_game.h"
 #include "max_subarray.h"
 #include "best_time_sell_stock.h"
+#include "word_search.h"
+
+TEST_F(TestDP, MinSubArrayWithTarget)
+{
+	//auto sol1 = minSubArrayWithTarget({2,3,1,2,4,3}, 7);
+	//ASSERT_EQ(sol1.first,  4);
+	//ASSERT_EQ(sol1.second, 5);
+
+	auto sol2 = minSubArrayWithTarget({5,1,3,5,10,7,4,9,2,8}, 15);
+	ASSERT_EQ(sol2.first,  4);
+	ASSERT_EQ(sol2.second, 5);
+}
+
+TEST_F(TestDP, MinWindowSubstring)
+{
+	ASSERT_EQ(minWindowSubstring("ADOBECODEBANC", "ABC"), "BANC");
+	ASSERT_EQ(minWindowSubstring("a", "a"), "a");
+	ASSERT_EQ(minWindowSubstring("a", "aa"), "");
+	ASSERT_EQ(minWindowSubstring("a", "b"),  "");
+	ASSERT_EQ(minWindowSubstring("ab", "a"), "a");
+}
 
 TEST_F(TestDP, NQueen)
 {
@@ -93,4 +114,15 @@ TEST_F(TestDP, BestTimeSellStock)
 	ASSERT_EQ(BestTimeSell::maxProfit2({7,1,5,3,6,4}),  7);
 	ASSERT_EQ(BestTimeSell::maxProfit2({1,2,3,4,5}),    4);
 	ASSERT_EQ(BestTimeSell::maxProfit2({7,6,4,3,1}),    0);
+}
+
+TEST_F(TestDP, WordSearch)
+{
+	std::vector<std::vector<char>> board = {
+		{'A','B','C','E'},
+		{'S','F','C','S'},
+		{'A','D','E','E'}
+	};
+
+	ASSERT_TRUE(WordSearch::exists(board, "ABCCED"));
 }
