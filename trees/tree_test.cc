@@ -92,5 +92,9 @@ TEST_F(TestTree, BST)
 
 TEST_F(TestTree, Heap)
 {
+    Heap<int> heap({make_int(10), make_int(100), make_int(40), make_int(15), make_int(30), make_int(50), make_int(40), nullptr}, heapType::Max);
+
+    heap.printTree();
+    ASSERT_TRUE(Heap<int>::isValidHeap(heap.getArray(), heapType::Max));
 }
 

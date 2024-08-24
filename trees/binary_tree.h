@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <cmath>
 #include <iostream>
 
 template <typename T>
@@ -79,7 +80,7 @@ public:
     std::size_t getMaxIndex() const { return m_tree.size() - 1; }
 
     //Basically, second half of array will all be leaf nodes.
-    std::size_t getLastNonLeafIndex() const { return m_tree.size()/2 - 1; }
+    std::size_t getLastNonLeafIndex() const { return std::floor(m_tree.size()/2); }
 
     void printTree() 
     {

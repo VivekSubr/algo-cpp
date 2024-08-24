@@ -3,68 +3,59 @@
 #include <string>
 #include <stack>
 #include <unordered_map>
-#include <unordered_set>
 
-std::stack<char> inflix2postflix(const std::string& expr)
+std::string inflix2postflix(const std::string& expr)
 {
-    static std::unordered_set<char> op_set = {'*', '/', '+', '-'};
+    //operator precedence as per BODMAS, lower values more precedence
+    static std::unordered_map<char, int> op_set = {{'*', 0}, {'/', 1}, {'+', 2}, {'-', 3}};
 
-    std::stack<char> ret;
+    std::string ret;
+    std::stack<char> op_stack;
     for (auto ch : expr)
     {
         if(ch == ' ') continue;
 
-        if(op_set.find(ch) != op_set.end()) ret.push(ch);
-        else if(ch == '(')                  ret.push(ch);
+        if(op_set.find(ch) != op_set.end()) 
+        {
+            if(op_stack.size() > 0)
+            {
+                auto cur = op_stack.top();
+                while(op_set.find(cur) != op_set.end() && op_set.at(cur) <= op_set.at(ch))
+                { //if the new operator has higher or equal precedence than top
+                    ret += cur;
+                    op_stack.pop();
+
+                    if(op_stack.size() > 0) cur = op_stack.top();
+                    else                    break;
+                }
+            }
+
+            op_stack.push(ch);
+        }
+        else if(ch == '(') op_stack.push(ch);
         else if(ch == ')')
-        { //pop the stack and output it until a ‘(‘ is encountered, and discard both the parenthesis. 
-          std::vector<char> temp;
-          while(ret.top() != '(')
+        { //pop the stack and output it until a ‘(‘ is encountered, and discard both the parenthesis.      
+          while(op_stack.top() != '(')
           {
-            temp.push_back(ret.top()); 
-            ret.pop();
+            ret += op_stack.top();
+            op_stack.pop();
           }
 
-          ret.pop();
-          for(auto rch : temp) ret.push(rch);
+          op_stack.pop();
         }
+        else ret += ch; //it will be an operand, which are directly added.
+    }
+
+    while(op_stack.size() > 0)
+    { //append the remaining
+        ret += op_stack.top();
+        op_stack.pop();
     }
 
     return ret;
 }
 
-std::string stack2str(std::stack<char>& s)
+int eval(const std::string& postFlix)
 {
-    std::string ret;
-    while(!s.empty()) 
-    {
-        ret += s.top();
-        s.pop();
-    }
-
-    return ret;
-}
-
-int eval(const std::stack<char>& postFlix)
-{
-    int ret;
-    std::stack<char>  operand_stack;
-    std::stack<char>  operator_stack; 
-    static std::unordered_set<char> op_set = {'*', '/', '+', '-'};
-
-    while(!postFlix.empty())
-    {
-        char cur = postFlix.top();
-        if(op_set.find(cur) != op_set.end())
-        {
-            operator_stack.push(cur);
-        }
-        else if(cur == '(')
-        {
-
-        }
-        else operand_stack.push(cur);
-    }
-
-    return ret;
+    return 0;
 }

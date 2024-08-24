@@ -54,9 +54,11 @@ int length(std::shared_ptr<ListNode> list)
 void reverse(std::shared_ptr<ListNode> list)
 {
     std::shared_ptr<ListNode> it = list;
-    while(it != nullptr)
+    while(it != nullptr && it->next != nullptr)
     {
+        auto temp = it->next;
+        std::swap(it, it->next);
 
+        it = temp;
     }
-
 }

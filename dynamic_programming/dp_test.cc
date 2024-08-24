@@ -8,13 +8,13 @@
 
 TEST_F(TestDP, MinSubArrayWithTarget)
 {
-	//auto sol1 = minSubArrayWithTarget({2,3,1,2,4,3}, 7);
-	//ASSERT_EQ(sol1.first,  4);
-	//ASSERT_EQ(sol1.second, 5);
+	auto sol1 = minSubArrayWithTarget({2,3,1,2,4,3}, 7);
+	ASSERT_EQ(sol1.first,  4);
+	ASSERT_EQ(sol1.second, 5);
 
 	auto sol2 = minSubArrayWithTarget({5,1,3,5,10,7,4,9,2,8}, 15);
-	ASSERT_EQ(sol2.first,  4);
-	ASSERT_EQ(sol2.second, 5);
+	ASSERT_EQ(sol2.first,  3);
+	ASSERT_EQ(sol2.second, 4);
 }
 
 TEST_F(TestDP, MinWindowSubstring)
@@ -109,11 +109,13 @@ TEST_F(TestDP, JumpGame)
 
 TEST_F(TestDP, BestTimeSellStock)
 {
-	ASSERT_EQ(BestTimeSell::maxProfit({7,1,5,3,6,4}), 5);
+	ASSERT_EQ(BestTimeSell::maxProfit({7,1,5,3,6,4}),  5);
+	ASSERT_EQ(BestTimeSell::maxProfit2({7,1,5,3,6,4}), 7);
+	ASSERT_EQ(BestTimeSell::maxProfit2({1,2,3,4,5}),   4);
+	ASSERT_EQ(BestTimeSell::maxProfit2({7,6,4,3,1}),   0);
 
-	ASSERT_EQ(BestTimeSell::maxProfit2({7,1,5,3,6,4}),  7);
-	ASSERT_EQ(BestTimeSell::maxProfit2({1,2,3,4,5}),    4);
-	ASSERT_EQ(BestTimeSell::maxProfit2({7,6,4,3,1}),    0);
+	ASSERT_EQ(BestTimeSell::maxProfitK(2, {2,4,1}),   2);
+	//ASSERT_EQ(BestTimeSell::maxProfitK(2, {3,2,6,5,0,3}),   7);
 }
 
 TEST_F(TestDP, WordSearch)

@@ -28,7 +28,7 @@ private:
             return false;
         }
 
-        std::cout<<"("<<i<<" "<<j<<" "<<board[i][j]<<") ";
+        //std::cout<<"("<<i<<" "<<j<<" "<<board[i][j]<<") ";
         memo_set.insert(stringify(i, j));
         if(board[i][j] == word[nChar])
         {

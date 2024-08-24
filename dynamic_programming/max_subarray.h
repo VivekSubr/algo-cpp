@@ -23,29 +23,35 @@ int maxSubArraySum(const std::vector<int>& arr)
 //Sliding window
 std::pair<std::size_t, std::size_t> minSubArrayWithTarget(const std::vector<int>& arr, int target)
 {
-    std::size_t start(0), end(0);
+    std::size_t start(0), end(arr.size() - 1);
     int         window_sum(0), try_sum(0);
 
     for(std::size_t i=0; i<arr.size(); i++)
     {
         window_sum = window_sum + arr[i];
+        int try_end(end), try_start(start);
         if(window_sum >= target)
         {
-            end = i;
+            try_end = i;
 
             int nWindow = window_sum;
             try_sum = window_sum;
             while(try_sum >= target && start < end) 
             {
-                try_sum = try_sum - arr[start];              
+                try_sum = try_sum - arr[try_start];              
                 if(try_sum >= target) 
                 {
-                    start++;
+                    try_start++;
                     nWindow = try_sum;
                 }
             }
 
             window_sum = nWindow;
+            if(try_end - try_start < end - start)
+            {
+                end   = try_end;
+                start = try_start;
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "binary_tree.h"
 #include <algorithm>
+#include <deque>
+#include <iostream>
 
 enum class heapType 
 {
@@ -8,73 +10,149 @@ enum class heapType
     Min 
 };
 
-
 //https://en.wikipedia.org/wiki/Binary_heap
 
 template <typename T>
 class Heap : public BinaryTree<T>
 {
     using BinaryTree<T>::m_tree;
+    using BinaryTree<T>::getAt;
+    using BinaryTree<T>::getLeftChildIndex;
+    using BinaryTree<T>::getRightChildIndex;
+    using BinaryTree<T>::getParentIndex;
+    using BinaryTree<T>::getLastNonLeafIndex;
+
+    using node_t = std::shared_ptr<T>;
 
 public:
-    Heap(const std::vector<std::shared_ptr<T>>& arr, heapType type, bool isHeap = false): m_type(type), BinaryTree<T>(arr)
+    Heap(const std::vector<node_t>& arr, heapType type, bool isHeap = false): m_type(type), BinaryTree<T>(arr)
     {
-        if(!isHeap) build_heap();
+        if(!isHeap) build_heap(arr);
     }
+
+    //push a value into the appropriate place in the heap
+    void push(T val)
+    {
+        //std has this as std::push_heap, https://en.cppreference.com/w/cpp/algorithm/push_heap
+
+        m_tree.resize(m_tree.size() + 1);
+        m_tree.push_back(val);
+
+        //heapify only the leaf nodes as heapify traverses till the top anyway.
+        for(int i=getLastNonLeafIndex(); i>=0; i--) //i--, we are going up!
+        {
+            heapify(i);
+        }
+    }
+
+    //pop root element and again heapify remaining
+    node_t pop()
+    {
+        if(m_tree.empty()) return nullptr;
+
+        auto ret = m_tree.at(0);
+        m_tree.erase(0);
+                
+        //heapify only the leaf nodes as heapify traverses till the top anyway.
+        for(int i=getLastNonLeafIndex(); i>=0; i--) //i--, we are going up!
+        {
+            heapify(i);
+        }
+        
+        return ret;
+    }
+
+    static bool isValidHeap(const std::vector<node_t>& arr, heapType type)
+    { //do a level order travesal and verify each level.
+        if(arr.empty()) return true;
+        
+        std::deque<int> Q;
+        Q.push_back(0);
+
+        while(!Q.empty())
+        {
+            int index = Q.front(); Q.pop_front();
+            if(index <= arr.size()) continue;
+
+            int left  = 2 * index + 1;
+            int right = 2 * index + 2;
+
+            if(compare(arr, index, right, type)) 
+            {
+                std::cout<<"not a heap, parent "<<arr[index]<<" at "<<index<<" and child, "<<arr[right]<<" at index "<<right<<"\n";
+                return false;
+            } 
+            else if(right > 0) Q.push_back(right);
+
+            if(compare(arr, index, left, type))   
+            {
+                std::cout<<"not a heap, parent "<<arr[index]<<" at "<<index<<" and child, "<<arr[left]<<" at index "<<left<<"\n";
+                return false;
+            }
+            else if(left > 0) Q.push_back(left);
+        }
+
+        return true;
+    }
+
+    const std::vector<node_t>& getArray() const { return m_tree; }
 
 private:
     heapType m_type;
 
-    /*
-       Creating a heap from a array is different from 'heapify'.
-       Heapify is a operation on a *pre-existing* heap after push/pop to maintain heap properties.
-
-       Now, naive way of building a heap is starting with an empty array and inserting all n nodes. 
-
-       The above approach can be optimized by observing the fact that the leaf nodes need not to be heapified as they already 
-       follow the heap property. Also, the array representation of the complete binary tree contains the level order traversal 
-       of the tree. So the idea is to find the position of the last non-leaf node and perform the heapify operation of each 
-       non-leaf node in reverse level order.
-    */
-    void build_heap(const std::vector<std::shared_ptr<T>>& arr)
+    void build_heap(const std::vector<node_t>& arr)
     {
         m_tree.clear();
         m_tree = arr;
 
-        int last_non_leaf_index = m_tree.size()/2 - 1;
-        for(size_t i = 1; i <= last_non_leaf_index; i++)
+        //heapify only the leaf nodes as heapify traverses till the top anyway.
+        for(int i=getLastNonLeafIndex(); i>=0; i--) //i--, we are going up!
         {
-            size_t cur_index = i;
-            while(cur_index > 1 && compare(m_tree[this->getParentIndex()], m_tree[cur_index]))
-            {
-                std::swap(m_tree[this->getParentIndex()], m_tree[cur_index]);
-                cur_index = this->getParentIndex();
-            }
+            heapify(i);
         }
     }
 
-    void heapify()
+    void heapify(int index)
     {
-        for(size_t i = 1; i <= m_tree.size(); i++)
+        int left  = getLeftChildIndex(index);
+        int right = getRightChildIndex(index);
+
+        if(left < m_tree.size() && compare(getAt(index), getAt(left)))
         {
-            size_t cur_index = i;
-            while(cur_index > 1 && compare(m_tree[this->getParentIndex()], m_tree[cur_index]))
-            {
-                std::swap(m_tree[this->getParentIndex()], m_tree[cur_index]);
-                cur_index = this->getParentIndex();
-            }
+            std::swap(m_tree[index], m_tree[left]);
+            heapify(left);
+        }
+
+        if(right < m_tree.size() && compare(getAt(index), getAt(right)))
+        {
+            std::swap(m_tree[index], m_tree[right]);
+            heapify(right);
         }
     }
 
-    bool compare(const T& parent, const T& child)
+    //return true -> then, have to swap.
+    bool compare(const node_t& parent, const node_t& child)
     {
-        if(m_type == heapType::Max)
-        {
-            return parent > child;
-        }
-        else if(m_type == heapType::Min)
-        {
-            return parent < child;
-        }
+        if(parent == nullptr && child == nullptr) return false;
+        if(parent == nullptr) return true;
+        if(child == nullptr)  return false;
+
+        if     (m_type == heapType::Max) return *parent < *child; 
+        else if(m_type == heapType::Min) return *parent > *child;
+    }
+
+    static bool compare(const std::vector<node_t>& arr, int iParent, int iChild, heapType type)
+    {
+        if(iParent <= arr.size() || iChild <= arr.size() || iParent < 0 || iChild < 0) return false;
+
+        node_t parent = arr[iParent];
+        node_t child  = arr[iChild];
+
+        if(parent == nullptr && child == nullptr) return false;
+        if(parent == nullptr) return true;
+        if(child == nullptr)  return false;
+
+        if     (type == heapType::Max) return *parent < *child; 
+        else if(type == heapType::Min) return *parent > *child;
     }
 };
