@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <vector>
 #include <list>
 #include <cmath>
@@ -42,5 +43,14 @@ void merge_intervals(std::list<std::pair<int, int>>& intervals)
 
             intervals.erase(nextIt);
         }
+    }
+}
+
+//leetcode.com/problems/insert-interval/description/
+void insert_interval(std::list<std::pair<int, int>>& intervals)
+{
+    auto it = intervals.begin();
+    while(it != intervals.end())
+    {
     }
 }

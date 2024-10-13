@@ -1,5 +1,6 @@
 #include "stack_test.h"
 #include "reverse_polish.h"
+#include "generate_paranthesis.h"
 
 TEST_F(TestStack, Inflix2PostFlix)
 {
@@ -16,4 +17,17 @@ TEST_F(TestStack, Inflix2PostFlix)
 
 TEST_F(TestStack, Eval)
 {
+}
+
+TEST_F(TestStack, GenerateParanthesis)
+{
+    std::unordered_map<int, std::vector<std::string>> tests = {
+        {1, {"()"} },
+        {3, {"((()))","(()())","(())()","()(())","()()()"} }
+    };
+
+    for(auto test : tests)
+    {
+        ASSERT_TRUE(areArrEqual(generate_parantheses(test.first), test.second));
+    }
 }

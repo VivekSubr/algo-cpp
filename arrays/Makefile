@@ -5,7 +5,7 @@ clean:
 	rm -fr build
 
 test:
-	./build/twoPointerTest
+	./build/arrayTest
 
 debug:
-	gdb -d ${PWD} ${PWD}/build/twoPointerTest
+	gdb -d ${PWD} ${PWD}/build/arrayTest

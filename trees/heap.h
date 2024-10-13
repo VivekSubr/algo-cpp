@@ -25,7 +25,7 @@ class Heap : public BinaryTree<T>
     using node_t = std::shared_ptr<T>;
 
 public:
-    Heap(const std::vector<node_t>& arr, heapType type, bool isHeap = false): m_type(type), BinaryTree<T>(arr)
+    Heap(const std::vector<node_t>& arr, heapType type, bool isHeap = false): BinaryTree<T>(arr), m_type(type)
     {
         if(!isHeap) build_heap(arr);
     }
@@ -66,16 +66,16 @@ public:
     { //do a level order travesal and verify each level.
         if(arr.empty()) return true;
         
-        std::deque<int> Q;
+        std::deque<size_t> Q;
         Q.push_back(0);
 
         while(!Q.empty())
         {
-            int index = Q.front(); Q.pop_front();
+            size_t index = Q.front(); Q.pop_front();
             if(index <= arr.size()) continue;
 
-            int left  = 2 * index + 1;
-            int right = 2 * index + 2;
+            size_t left  = 2 * index + 1;
+            size_t right = 2 * index + 2;
 
             if(compare(arr, index, right, type)) 
             {
@@ -112,10 +112,10 @@ private:
         }
     }
 
-    void heapify(int index)
+    void heapify(size_t index)
     {
-        int left  = getLeftChildIndex(index);
-        int right = getRightChildIndex(index);
+        size_t left  = getLeftChildIndex(index);
+        size_t right = getRightChildIndex(index);
 
         if(left < m_tree.size() && compare(getAt(index), getAt(left)))
         {
@@ -139,11 +139,13 @@ private:
 
         if     (m_type == heapType::Max) return *parent < *child; 
         else if(m_type == heapType::Min) return *parent > *child;
+
+        return false;
     }
 
-    static bool compare(const std::vector<node_t>& arr, int iParent, int iChild, heapType type)
+    static bool compare(const std::vector<node_t>& arr, size_t iParent, size_t iChild, heapType type)
     {
-        if(iParent <= arr.size() || iChild <= arr.size() || iParent < 0 || iChild < 0) return false;
+        if(iParent <= arr.size() || iChild <= arr.size()) return false;
 
         node_t parent = arr[iParent];
         node_t child  = arr[iChild];
@@ -154,5 +156,7 @@ private:
 
         if     (type == heapType::Max) return *parent < *child; 
         else if(type == heapType::Min) return *parent > *child;
+
+        return false;
     }
 };

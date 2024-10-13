@@ -2,6 +2,7 @@
 #define private public
     #include "bst.h"   
     #include "heap.h"
+    #include "b_tree.h"
 #undef private
 #include "tree_test.h"
 #include <gmock/gmock-matchers.h>
@@ -98,3 +99,10 @@ TEST_F(TestTree, Heap)
     ASSERT_TRUE(Heap<int>::isValidHeap(heap.getArray(), heapType::Max));
 }
 
+TEST_F(TestTree, BTree)
+{
+    std::vector<int> arr = {100, 35, 65, 130, 180, 10, 20, 40, 50, 70, 80, 90, 110, 120, 140, 160, 190, 240, 260};
+
+    BTree<int> tree(arr, 3);
+    tree.printTree();
+}
