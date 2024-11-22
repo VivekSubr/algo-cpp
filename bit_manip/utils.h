@@ -53,3 +53,13 @@ int count_zeroes(const std::string& str)
 
     return ret;
 }
+
+uint hexToDigit(char ascii)
+{
+    uint hexDigit(ascii);
+    if     (ascii >='0' && ascii <='9') hexDigit = ascii - '0';
+    else if(ascii >='a' && ascii <='f') hexDigit = ascii -'a' + 10;
+    else if(ascii >='A' && ascii <='F') hexDigit = ascii -'A' + 10;
+
+    return hexDigit;
+}
