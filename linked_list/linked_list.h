@@ -34,9 +34,7 @@ bool isEqual(std::shared_ptr<ListNode> list1, std::shared_ptr<ListNode> list2)
         list2 = list2->next;
     }
 
-    if(list1 != nullptr || list2 != nullptr) return false;
-
-    return true;
+    return list1 != nullptr && list2 != nullptr;
 }
 
 int length(std::shared_ptr<ListNode> list)
@@ -51,14 +49,20 @@ int length(std::shared_ptr<ListNode> list)
     return ret;
 }
 
-void reverse(std::shared_ptr<ListNode> list)
+void reverse(std::shared_ptr<ListNode>& list) 
 {
-    std::shared_ptr<ListNode> it = list;
-    while(it != nullptr && it->next != nullptr)
-    {
-        auto temp = it->next;
-        std::swap(it, it->next);
+    std::shared_ptr<ListNode> prev    = nullptr;
+    std::shared_ptr<ListNode> current = list;
+    std::shared_ptr<ListNode> next    = nullptr;
 
-        it = temp;
+    while (current != nullptr) 
+    {
+        next = current->next;
+        current->next = prev;
+
+        prev = current;
+        current = next;
     }
+
+    list = prev;
 }

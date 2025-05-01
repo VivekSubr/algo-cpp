@@ -38,16 +38,6 @@ public:
 private:
     std::shared_ptr<treeNode> m_root = nullptr;
 
-    int getLeftChildIndex(int index) const
-    {
-        return 2 * index + 1;
-    }
-
-    int getRightChildIndex(int index) const
-    {
-        return 2 * index + 2;
-    }
-
     void buildTree(const std::vector<int>& treeArr, std::shared_ptr<treeNode> node, int index)
     {
         if(index < treeArr.size() && treeArr[index] >= 0)

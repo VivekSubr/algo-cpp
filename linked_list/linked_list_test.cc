@@ -4,6 +4,10 @@
 
 TEST_F(TestList, Basic)
 {
+    auto list = createList({1, 2, 3, 4, 5});
+    reverse(list);
+
+    ASSERT_TRUE(isEqual(list, createList({5, 4, 3, 2, 1})));
 }
 
 TEST_F(TestList, Merge2Lists)
