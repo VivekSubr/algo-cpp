@@ -11,9 +11,9 @@ std::shared_ptr<ListNode> merge_2_sorted(std::shared_ptr<ListNode> list1, std::s
     auto it_1 = list1;
     auto it_2 = list2;
 
-    std::shared_ptr<ListNode> ret  = nullptr;
+    std::shared_ptr<ListNode> ret  = nullptr; 
     if(it_1 != nullptr && it_2 != nullptr)
-    {
+    { //set new head
         if(it_1->val < it_2->val)
         {
             ret = it_1;

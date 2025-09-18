@@ -37,3 +37,10 @@ bool is_valid_palindrome(const std::string& str)
 
     return true;
 }
+
+//leetcode.com/problems/palindrome-partitioning/description/
+std::vector<std::vector<std::string>> partition(const std::string& s) 
+{
+    std::vector<std::vector<std::string>> ret;
+    return ret; 
+}

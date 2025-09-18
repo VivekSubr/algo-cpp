@@ -23,12 +23,31 @@ TEST_F(TwoPointerTest, ValidPalindrome)
 TEST_F(TwoPointerTest, SubSequence)
 {
     std::vector<std::tuple<std::string, std::string, bool>> tests = {
-        {"abc", "ahbgdc", true},
-        {"acb", "ahbgdc", false}
+        {"abc", "ahbgdabc", true},
+        {"acb", "ahbgdc",   false}
     };
     
     for(auto ele : tests)
     {
-        ASSERT_EQ(is_sub_sequence(std::get<1>(ele), std::get<0>(ele)), std::get<2>(ele));
+        ASSERT_EQ(is_sub_sequence(std::get<1>(ele), std::get<0>(ele)), std::get<2>(ele))
+            << "Failed for " << std::get<0>(ele) << ", " << std::get<1>(ele);
     }
+}
+
+TEST_F(TwoPointerTest, ThreeSum)
+{
+    std::vector<std::tuple<std::vector<int>, std::set<std::tuple<int, int, int>>>> tests = {
+        {{-1,0,1,2,-1,-4}, {{std::make_tuple(-1,-1,2), std::make_tuple(-1,0,1)}}},
+        {{0,1,1}, {}},
+        {{0,0,0}, {{std::make_tuple(0,0,0)}}}
+    };
+
+    for(auto ele : tests)
+    {
+        ASSERT_EQ(three_sum(std::get<0>(ele)), std::get<1>(ele));
+    }
+}
+
+TEST_F(TwoPointerTest, LongestIncreasingSubsequence)
+{
 }

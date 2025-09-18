@@ -73,6 +73,10 @@ TEST_F(TestTree, BinaryTreeTraversal)
     for(std::size_t i=0; i<levelOrder.size(); i++) { ASSERT_EQ(*levelOrder[i], levelOrderEx[i]); }
 }
 
+TEST_F(TestTree, DFS)
+{
+}
+
 TEST_F(TestTree, BST)
 {
     auto make_invalid_tree = []() { 
@@ -81,8 +85,7 @@ TEST_F(TestTree, BST)
     ASSERT_THROW(make_invalid_tree(), std::runtime_error);
 
     //Valid BST
-    BinarySearchTree<int> bst({make_int(8), make_int(3), make_int(10), make_int(1), make_int(6), nullptr, make_int(14),
-                         nullptr, nullptr, make_int(4), make_int(7), make_int(13)});
+    BinarySearchTree<int> bst(arr2pts({8, 3, 10, 1, 6, -1, 14, -1, -1, 4, 7, 13}));
     bst.printTree();
 
     std::cout<<"***************\n";

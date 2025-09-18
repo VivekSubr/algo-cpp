@@ -61,3 +61,9 @@ std::vector<std::string> generate_parantheses(int n)
 
     return ret;
 }
+
+//leetcode.com/problems/remove-invalid-parentheses/description/ 
+std::vector<std::string> removeInvalidParentheses(const std::string& s) 
+{
+
+}

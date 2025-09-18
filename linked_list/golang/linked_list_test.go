@@ -25,7 +25,7 @@ func TestBasic(t *testing.T) {
     assert.Nil(t, currentNode, "Expected end of list, but found extra nodes")
 
     nList1 := CreateList([]int{1, 2, 3, 4, 5 })
-    nList2 :=  CreateList([]int{1, 2, 3, 6 })
+    nList2 := CreateList([]int{1, 2, 3, 6 })
 
     assert.True(t,  AreEqual(listHead, nList1))
     assert.False(t, AreEqual(listHead,nList2))
@@ -39,4 +39,8 @@ func TestBasic(t *testing.T) {
         assert.Equal(t, expectedValue, currentNode.val, "Value mismatch at index %d", i)
         currentNode = currentNode.next
     }
+}
+
+func TestCopyRandomList(t *testing.T) {
+    
 }

@@ -17,7 +17,7 @@ struct treeNode
     std::shared_ptr<treeNode> left  = nullptr;
 };
 
-class tree 
+/*class tree 
 {
 public:
     tree(const std::vector<int>& treeArr)
@@ -98,4 +98,4 @@ bool isValidBST(std::shared_ptr<treeNode> root)
     }
 
     return true;
-}
+}*/
