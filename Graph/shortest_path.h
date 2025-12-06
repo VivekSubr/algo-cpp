@@ -13,6 +13,7 @@ std::unordered_map<int, int> djikstra(Graph* graph, int rootNode)
 
     //Q is a min priority queue (ie, front is aways smallest number), with comparision on path length
     //pair<int, int> -> pair of path length from startNode and node number
+    //ie, pair.first --> distance, pair.second --> node number
     auto Compare = [](int_pair& P1, int_pair& P2) { return P1.first > P2.first; };
     std::priority_queue<int_pair, std::vector<int_pair>, decltype(Compare)> Q(Compare);
 

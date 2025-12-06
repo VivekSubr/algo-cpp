@@ -2,8 +2,45 @@
 #include "palindrome.h"
 #include "sum.h"
 #include "sequence.h"
+#include "max_sliding_window.h"
+#include "binary_search.h"
 #include <unordered_map>
 #include <tuple>
+#include <numeric>
+
+TEST_F(TwoPointerTest, BinarySearch)
+{
+    std::vector<std::tuple<std::vector<int>, int, int>> tests = {
+        {{-1,0,3,5,9,12}, 9, 4},
+        {{1,0,3,5,9,12}, 2, -1},
+    };
+
+    for(auto ele : tests)
+    {
+        ASSERT_EQ(binary_search(std::get<0>(ele), std::get<1>(ele)), std::get<2>(ele))
+            << "Failed for input " << 
+            std::accumulate(std::get<0>(ele).begin(), std::get<0>(ele).end(), std::string(""), 
+            [](const std::string& a, int b) { return a + std::to_string(b) + " "; }) 
+            << " and target " << std::get<1>(ele);
+    }
+}
+
+TEST_F(TwoPointerTest, SearchInRotatedSortedArray)
+{
+    std::vector<std::tuple<std::vector<int>, int, int>> tests = {
+        {{4,5,6,7,0,1,2}, 0, 4},
+        {{4,5,6,7,0,1,2}, 3, -1},
+        {{1}, 0, -1}
+    };
+
+    for(auto ele : tests)
+    {
+        ASSERT_EQ(searchRotatedArray(std::get<0>(ele), std::get<1>(ele)), std::get<2>(ele))
+            << "Failed for input " << 
+            std::accumulate(std::get<0>(ele).begin(), std::get<0>(ele).end(), std::string(""), 
+            [](const std::string& a, int b) { return a + std::to_string(b) + " "; });
+    }
+}
 
 TEST_F(TwoPointerTest, ValidPalindrome)
 {
@@ -48,6 +85,27 @@ TEST_F(TwoPointerTest, ThreeSum)
     }
 }
 
-TEST_F(TwoPointerTest, LongestIncreasingSubsequence)
+TEST_F(TwoPointerTest, LengthOfLIS)
 {
+    std::vector<std::tuple<std::vector<int>, int>> tests = {
+        {{10,9,2,5,3,7,101,18}, 4},
+        {{0,1,0,3,2,3}, 4},
+        {{7,7,7,7,7,7,7}, 1}
+    };
+
+    for(auto ele : tests)
+    {
+        ASSERT_EQ(lengthOfLIS(std::get<0>(ele)), std::get<1>(ele)) << "Failed for input " << 
+            std::accumulate(std::get<0>(ele).begin(), std::get<0>(ele).end(), std::string(""), 
+            [](const std::string& a, int b) { return a + std::to_string(b) + " "; });
+    }
+}
+
+TEST_F(TwoPointerTest, MaxSlidingWindow)
+{
+    std::vector<int> nums = {1,3,-1,-3,5,3,6,7};
+    int k = 3;
+    std::vector<int> expected = {3,3,5,5,6,7};
+
+    ASSERT_EQ(maxSlidingWindow(nums, k), expected);
 }

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "utils.h"
 
 //https://en.wikipedia.org/wiki/Edit_distance
 //https://en.wikipedia.org/wiki/Levenshtein_distance
@@ -52,6 +53,19 @@ std::pair<int, std::vector<std::string>> edit_distance(const std::string& strA, 
     for(std::size_t i = 1; i <= strA.size(); i++) dp[i][0] = i; //Moving forward in i, adding each character 
     for(std::size_t j = 1; j <= strB.size(); j++) dp[0][j] = j; //Moving forward in j, adding each character
 
+    /*
+       Initially,
+          r   o   s
+       h  1   2   3  
+       o  2   0   0
+       r  3   0   0
+       s  4   0   0
+       e  5   0   0 
+    */
+
+    std::cout<<"Initial DP Matrix:\n";
+    print_matrix(dp);
+
     for(std::size_t i = 1; i <= strA.size(); i++)
     {
       for(std::size_t j = 1; j <= strB.size(); j++)
@@ -68,7 +82,8 @@ std::pair<int, std::vector<std::string>> edit_distance(const std::string& strA, 
     std::vector<std::string> opArr;
     
     //Traverse the dp matrix now and list out all operations done into opArr
-    
+    std::cout<<"Final DP Matrix:\n";
+    print_matrix(dp);
 
     return {dp[strA.size()][strB.size()], opArr};
 }

@@ -43,34 +43,39 @@ private:
     {
         int ret = node; //If completely disjoint, node is own parent
         while(ret != m_parentArr[ret])
-        {
+        { //go up till we find the root
             ret = m_parentArr[ret]; 
         }
 
         return ret;
     }
 
-    bool do_union(int n1, int n2)
+    // Union by rank. Returns true if a merge happened, false if already same set.
+    bool do_union(int a, int b)
     {
-        //Find the parents
-        int p1 = find(n1);
-        int p2 = find(n2);
+        int ra = find(a);
+        int rb = find(b);
+        if (ra == rb) return false;
 
-        if(p1 == p2) return false; //already in same connected component
-
-        if(m_rankArr[p2] > m_rankArr[p1]) //prefer to union with the larger component
+        // Attach smaller-rank tree under larger-rank tree
+        if (m_rankArr[ra] < m_rankArr[rb]) 
         {
-            m_parentArr[p2] = p1;
-            m_rankArr[p2]++;
-        }
-        else
+            m_parentArr[ra] = rb;
+        } 
+        else if (m_rankArr[ra] > m_rankArr[rb]) 
         {
-            m_parentArr[p1] = p2;
-            m_rankArr[p1]++;
+            m_parentArr[rb] = ra;
+        } 
+        else 
+        {
+            // Equal rank: choose one root, increment its rank
+            m_parentArr[rb] = ra;
+            m_rankArr[ra] += 1;
         }
-
+        
         return true;
-    } 
+    }
+
 };
 
 bool isConnected(std::shared_ptr<Graph> graph)

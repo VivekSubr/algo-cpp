@@ -1,0 +1,11 @@
+#include "gtest/gtest.h"
+//leetcode.com/studyplan/graph-theory/
+
+class TestGraph : public ::testing::Test
+{
+public:
+    virtual void SetUp(void) { }
+    virtual void TearDown(void) { }
+    static void SetUpTestSuite() { }
+    static void TearDownTestSuite() { }
+};

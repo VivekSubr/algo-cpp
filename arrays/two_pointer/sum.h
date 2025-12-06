@@ -28,7 +28,7 @@ std::set<std::tuple<int, int, int>> three_sum(std::vector<int>& nums)
     std::sort(nums.begin(), nums.end());
     std::set<std::tuple<int, int, int>> ret;
 
-    for(int i=0; i<nums.size(); i++)
+    for(std::size_t i=0; i<nums.size(); i++)
     {
         int j = i + 1;
         int k = nums.size() - 1;

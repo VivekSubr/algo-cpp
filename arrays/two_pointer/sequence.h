@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 bool is_sub_sequence(const std::string& str, const std::string& sub_str)
 {
@@ -15,7 +16,7 @@ bool is_sub_sequence(const std::string& str, const std::string& sub_str)
         return false;
     }
 
-    int i_str(0), i_sub_str(0);
+    std::size_t i_str(0), i_sub_str(0);
     bool check_consecutive = false;
     while(i_str < str.size() && i_sub_str < sub_str.size())
     {
@@ -39,8 +40,30 @@ bool is_sub_sequence(const std::string& str, const std::string& sub_str)
     return false;
 }
 
+size_t lengthOfLIS_continous(std::vector<int>& nums) 
+{
+    size_t start(0), end(0);
+    size_t max_len(1);
+    for(size_t i=1; i<nums.size(); i++)
+    {
+        if(nums[i] > nums[end]) end = i;
+        else 
+        {
+            start = i;
+            end = i;
+        }
+
+        max_len = std::max(max_len, end - start + 1);
+        //std::cout<<"start: "<<start<<", end: "<<end<<" len "<<max_len<<"\n";
+    }
+
+    return max_len;
+}
+
+
 
 //leetcode.com/problems/longest-increasing-subsequence/description/
+//Given an integer array nums, return the length of the longest strictly increasing subsequence
 /*
 approach:
 Consider the example nums = [2, 6, 8, 3, 4, 5, 1], 
@@ -54,7 +77,51 @@ With 5, we can't extend sub1, but we can extend sub2, so sub1 = [2, 6, 8], sub2 
 With 1, we can't extend neighter sub1 nor sub2, but we need to keep 1, so sub1 = [2, 6, 8], sub2 = [2, 3, 4, 5], sub3 = [1].
 Finally, length of longest increase subsequence = len(sub2) = 4.
 */
-int lengthOfLIS(std::vector<int>& nums) 
+
+void branch_LIS(std::vector<int>& nums, std::size_t index, std::vector<std::vector<int>>& alternate_subseqs)
 {
-    
+    std::vector<int> new_subseq;
+    for(size_t i=0; i<nums.size(); i++)
+    {
+        if(nums[i] > nums[index] && i < index)
+        { //we continue with this element
+            i = index;
+            new_subseq.push_back(nums[i]);
+        }
+        else if(nums[i] > new_subseq.back()) 
+        {
+            new_subseq.push_back(nums[i]);
+        }
+        else 
+        { //again, we have branching choices
+           branch_LIS(nums, i, alternate_subseqs);
+        }
+    }
+
+    alternate_subseqs.push_back(new_subseq);
+}
+
+size_t lengthOfLIS(std::vector<int>& nums) 
+{
+    std::vector<int> subseq;
+    std::vector<std::vector<int>> alternate_subseqs;
+    for(size_t i=0; i<nums.size(); i++)
+    {
+        int ele = nums[i];
+        if(subseq.empty() || ele > subseq.back()) subseq.push_back(ele);
+        else
+        {//now we have branching choices!
+            branch_LIS(nums, i, alternate_subseqs);
+        }
+    }
+
+    alternate_subseqs.push_back(subseq);
+
+    auto it = std::max_element(alternate_subseqs.begin(), alternate_subseqs.end(),
+         [](const std::vector<int>& a, const std::vector<int>& b)
+         {
+            return a.size() < b.size();   // compare by size
+        });
+
+    return it != alternate_subseqs.end() ? it->size() : 0;
 }

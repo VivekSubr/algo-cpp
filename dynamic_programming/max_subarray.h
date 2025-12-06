@@ -29,12 +29,12 @@ std::pair<std::size_t, std::size_t> minSubArrayWithTarget(const std::vector<int>
     for(std::size_t i=0; i<arr.size(); i++)
     {
         window_sum = window_sum + arr[i];
-        int try_end(end), try_start(start);
+        std::size_t try_end(end), try_start(start);
         if(window_sum >= target)
         {
             try_end = i;
 
-            int nWindow = window_sum;
+            std::size_t nWindow = window_sum;
             try_sum = window_sum;
             while(try_sum >= target && start < end) 
             {
@@ -58,7 +58,11 @@ std::pair<std::size_t, std::size_t> minSubArrayWithTarget(const std::vector<int>
     return std::pair<std::size_t, std::size_t>(start, end);
 }
 
-//https://leetcode.com/problems/minimum-window-substring/
+/*
+    Given two strings s and t of lengths m and n respectively, return the minimum window substring of s 
+    such that every character in t (including duplicates) is included in the window. 
+    If there is no such substring, return the empty string "".
+*/
 std::string minWindowSubstring(const std::string& str, const std::string& subStr)
 {
     if(subStr.size() > str.size()) return "";
@@ -72,7 +76,7 @@ std::string minWindowSubstring(const std::string& str, const std::string& subStr
 
     int start(0), end(-1);
     std::unordered_map<char, int> windowMap;
-    for(int i=0; i<str.size(); i++)
+    for(size_t i=0; i<str.size(); i++)
     {
         if(windowMap.find(str[i]) != windowMap.end()) windowMap[str[i]] = windowMap[str[i]] + 1;  
         else                                          windowMap[str[i]] = 1;

@@ -20,7 +20,7 @@ class BestTimeSell
    {
       virtual ~stock_state() = default;
       virtual std::shared_ptr<stock_state> on_update(Operation op, int cp, int& mp) = 0; //Operating on next stock, return next state
-
+      
       Operation current_op = Operation::None; 
       int m_nTransactions; 
       int m_price;
@@ -59,7 +59,10 @@ class BestTimeSell
                return std::make_shared<selling_stock>(m_nTransactions, m_cur_profit);
                  
             case Operation::Hold:
-                 return std::make_shared<selling_stock>(m_nTransactions, m_price, m_cur_profit);
+                 return std::make_shared<selling_stock>(m_nTransactions, m_cur_profit);
+
+            case Operation::None:
+               return nullptr;
          }
       }
    };
@@ -93,7 +96,10 @@ class BestTimeSell
                return nullptr; //Can't go from sell to sell
 
             case Operation::Hold:
-               return std::make_shared<selling_stock>();
+               return std::make_shared<selling_stock>(m_nTransactions, m_cur_profit);
+
+            case Operation::None:
+               return nullptr;
          }
       }
    };
@@ -110,13 +116,13 @@ class BestTimeSell
          switch(op)
          {
             case Operation::Buy:
-                 return std::make_shared<buying_stock>(m_nTransactions, m_price);
+               return std::make_shared<buying_stock>(m_nTransactions, new_price, m_price);
 
             case Operation::Sell:
-                 //return std::make_shared<selling_stock>(m_nTransactions, new_price, m_cur_profit);
+               return std::make_shared<selling_stock>(m_nTransactions, m_cur_profit);
 
             case Operation::Hold:
-                 return std::make_shared<selling_stock>(m_nTransactions, m_price);
+               return std::make_shared<selling_stock>(m_nTransactions, m_cur_profit);
          }
       }
    };
@@ -165,7 +171,7 @@ public:
    {
       int max_profit = 0;
 
-      do_maxProfitK(std::make_shared<buying_stock>(k, prices[0]), prices, 1, max_profit);
+      do_maxProfitK(std::make_shared<buying_stock>(0, k, prices[0]), prices, 1, max_profit);
 
       return max_profit;
    }

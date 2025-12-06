@@ -92,6 +92,9 @@ TEST_F(TestTree, BST)
     bst.insert(make_int(2));
     ASSERT_TRUE(bst.checkIfValid());
     bst.printTree();
+    std::cout<<"***************\n\n";
+
+    bst.del(make_int(8));
 }
 
 TEST_F(TestTree, Heap)
