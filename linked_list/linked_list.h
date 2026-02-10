@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include <sstream>
+#include <string>
 #include <vector>
 
 struct ListNode 
@@ -15,7 +17,7 @@ std::shared_ptr<ListNode> createList(const std::vector<int>& arr)
 {
     std::shared_ptr<ListNode> head = std::make_shared<ListNode>(arr[0]);
     std::shared_ptr<ListNode> list = head;
-    for(int i=1; i<arr.size(); i++)
+    for(size_t i=1; i<arr.size(); i++)
     {
         list->next = std::make_shared<ListNode>(arr[i]);
         list = list->next;
@@ -28,13 +30,13 @@ bool isEqual(std::shared_ptr<ListNode> list1, std::shared_ptr<ListNode> list2)
 {
     while(list1 != nullptr && list2 != nullptr)
     {
-        if(list1->val != list1->val) return false;
+        if(list1->val != list2->val) return false;
 
         list1 = list1->next;
         list2 = list2->next;
     }
 
-    return list1 != nullptr && list2 != nullptr;
+    return list1 == nullptr && list2 == nullptr;
 }
 
 int length(std::shared_ptr<ListNode> list)
@@ -65,4 +67,15 @@ void reverse(std::shared_ptr<ListNode>& list)
     }
 
     list = prev;
+}
+
+std::string print_list(std::shared_ptr<ListNode> list)
+{
+    std::ostringstream oss;
+    while(list != nullptr)
+    {
+        oss << list->val << " ";
+        list = list->next;
+    }
+    return oss.str();
 }

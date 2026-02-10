@@ -13,7 +13,7 @@
 		Equality: x==y → x and y must be in the same set.
 		Inequality: x!=y → x and y must be in different sets.   
 		
-	Hence these form 'disjoin sets'... so, we do 
+	Hence these form 'disjoint sets'... so, we do 
 		First pass: Union all pairs from equality equations (==).
 		Second pass: Check all inequalities (!=).
 
@@ -58,7 +58,6 @@ struct DSU
    
 bool equationsPossible(std::vector<std::string>& equations) 
 {
-	
 	DSU dsu;
 
     // 1) Union all equalities
