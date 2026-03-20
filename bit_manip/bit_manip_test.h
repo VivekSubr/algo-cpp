@@ -21,7 +21,7 @@ public:
         double ub, lb;
         if ((nearestAsInt == 0 && nearest > 1) // Overflow check
             || nearestAsInt >= n)
-        {
+        { 
             std::cout<<"Overflowed!\n";
             ub = nearest;
             lb = std::nextafter(nearest, nearest - 999999); // ? 

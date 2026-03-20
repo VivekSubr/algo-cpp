@@ -1,5 +1,6 @@
 #include "bit_manip_test.h"
 #include "utils.h"
+#include "reverse_num.h"
 #include <unordered_map>
 #include <algorithm>
 
@@ -32,10 +33,28 @@ TEST_F(TestBit, CountZeroes)
 
 TEST_F(TestBit, DoublePrecision)
 {
+    // double uses only 53 bits for the significand, so we can only expect to represent integers up to 2^53 exactly. 
+    // Beyond that, we may encounter precision issues.
+    // whereas uint64_t can represent integers up to 2^64 - 1
     dPrecision(std::numeric_limits<uint64_t>::max());         // Rounds up
     dPrecision(std::numeric_limits<uint64_t>::max() - 2046);  // Rounds down
     dPrecision(9999999999999999);
     dPrecision(10);
 
     dPrecision(1152921504606846976);
+}
+
+TEST_F(TestBit, ReverseDigits)
+{
+    std::unordered_map<int, int> tests = {
+        {12345, 54321},
+        {9876, 6789},
+        {1000, 1},
+        {0, 0}
+    };
+
+    for(auto test: tests)
+    {
+        ASSERT_EQ(reverse_digits(test.first), test.second) << "Failed to reverse " << test.first;
+    }
 }
