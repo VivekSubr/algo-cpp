@@ -9,3 +9,5 @@ test:
 
 debug:
 	gdb -d ${PWD} ${PWD}/build/2dTest
+
+include $(shell git rev-parse --show-toplevel)/visualizer/visualize.mk

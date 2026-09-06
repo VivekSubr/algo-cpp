@@ -6,3 +6,5 @@ test: clean
 
 clean:
 	go clean
+
+include $(shell git rev-parse --show-toplevel)/visualizer/visualize.mk

@@ -6,3 +6,5 @@ clean:
 
 test:
 	./build/FSMexampleTest
+
+include $(shell git rev-parse --show-toplevel)/visualizer/visualize.mk

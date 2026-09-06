@@ -1,0 +1,27 @@
+# Build output
+**/build/
+**/dist/
+compile_commands.json
+
+# Python
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+
+# AlgoViz run output
+.algoviz/
+algoviz-runs/
+
+# Editor and operating-system temporary files
+*.log
+*.temp
+*.tmp
+*~
+.DS_Store
+Thumbs.db
+core
+core.*

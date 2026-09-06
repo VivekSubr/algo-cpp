@@ -9,3 +9,5 @@ test:
 
 debug:
 	gdb -d ${PWD} ${PWD}/build/arrayTest
+
+include $(shell git rev-parse --show-toplevel)/visualizer/visualize.mk
