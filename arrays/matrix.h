@@ -76,7 +76,9 @@ std::vector<int> spiral_matrix(std::vector<std::vector<int>>& matrix)
 	return ret;
 }
 
-//leetcode.com/problems/maximal-square/description/
+/* 
+   Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+*/
 int maximalSquare(std::vector<std::vector<char>>& matrix) 
 {
 /*
@@ -99,9 +101,9 @@ int maximalSquare(std::vector<std::vector<char>>& matrix)
     std::vector<std::vector<int>> dp(matrix.size() + 1, std::vector<int>(matrix[0].size() + 1, 0));
     int maxSide = 0;
 	
-	for (size_t i = 1; i < matrix.size(); ++i) 
+	for (size_t i = 1; i <= matrix.size(); ++i) //Keep making mistake -> i < matrix.size() + 1, because dp is 1-indexed, since we do i-1
 	{
-        for (size_t j = 1; j < matrix[0].size(); ++j) 
+        for (size_t j = 1; j <= matrix[0].size(); ++j) 
 		{
             if (matrix[i-1][j-1] == '1') 
 			{

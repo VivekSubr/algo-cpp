@@ -9,8 +9,9 @@ int binary_search(const std::vector<int>& nums, int target)
     {
         int mid = start + (end - start)/2;
         if(nums.at(mid) == target) return mid;
-        else if(nums.at(mid) < target) start = mid + 1;
-        else end = mid - 1;
+        
+        if(nums.at(mid) < target) start = mid + 1; //Discard first half, since mid is smaller than target
+        else                      end   = mid - 1; //Else, discard second half
     }
 
     return -1;

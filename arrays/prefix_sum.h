@@ -27,6 +27,15 @@ private:
     std::vector<int> m_prefix_sum;
 };
 
+/*
+    Given an integer array nums, return an array output where output[i] is the product of 
+    all the elements of nums except nums[i].
+*/
+std::vector<int> productExceptSelf(std::vector<int>& nums) 
+{
+
+}
+
 //leetcode.com/problems/subarray-sum-equals-k/description/
 //given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
 int subarraySum(std::vector<int>& nums, int k) 

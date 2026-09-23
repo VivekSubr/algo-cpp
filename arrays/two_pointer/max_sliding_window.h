@@ -25,8 +25,28 @@ std::vector<int> maxSlidingWindow(std::vector<int>& nums, std::size_t k)
 */
 
 /* 
-   Another idea - BST, very time we slide the window, we remove the node that's out of the window 
+   Another idea - BST, every time we slide the window, we remove the node that's out of the window 
    and add the one that comes into the window to the tree
+
+    std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k) 
+    {
+        std::multiset<int> s;
+        std::deque<std::multiset<int>::iterator> iters;   // one entry per element currently in the window
+        std::vector<int> ret;
+
+        for (int i = 0; i < k; i++) { iters.push_back(s.insert(nums[i])); }
+        ret.push_back(*s.rbegin());
+
+        for (int i = k; i < (int)nums.size(); i++) {
+            s.erase(iters.front());   // erase the oldest element directly — no find()
+            iters.pop_front();
+
+            iters.push_back(s.insert(nums[i]));
+            ret.push_back(*s.rbegin());
+        }
+
+        return ret;
+    }
 */
 
 

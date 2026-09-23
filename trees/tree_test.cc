@@ -1,11 +1,11 @@
 #include "tree_traversal.h"
+#include "tree_search.h"
 #define private public
     #include "bst.h"   
     #include "heap.h"
     #include "b_tree.h"
 #undef private
 #include "tree_test.h"
-#include <gmock/gmock-matchers.h>
 using namespace testing;
 
 #define make_int(x) std::make_shared<int>(x)
@@ -97,12 +97,17 @@ TEST_F(TestTree, BST)
     bst.del(make_int(8));
 }
 
+// make visualize FILE=heap.h FUNCTION=build_heap ALGOVIZ_ARGS='--test TestTree.Heap --timeout 1'
 TEST_F(TestTree, Heap)
 {
     Heap<int> heap({make_int(10), make_int(100), make_int(40), make_int(15), make_int(30), make_int(50), make_int(40), nullptr}, heapType::Max);
 
     heap.printTree();
     ASSERT_TRUE(Heap<int>::isValidHeap(heap.getArray(), heapType::Max));
+}
+
+TEST_F(TestTree, TopKFrequent)
+{
 }
 
 TEST_F(TestTree, BTree)

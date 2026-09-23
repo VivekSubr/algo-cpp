@@ -1,5 +1,10 @@
+all: build
+
 cmake: clean
 	mkdir -p build && cd build && cmake  -DCMAKE_BUILD_TYPE=Debug ..
+
+build: cmake
+	cmake --build build
 
 clean:
 	rm -fr build

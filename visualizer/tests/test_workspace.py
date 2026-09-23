@@ -61,6 +61,7 @@ class WorkspaceTests(unittest.TestCase):
                 result = main(
                     [
                         str(source),
+                        "--list",
                         "--data-dir",
                         str(repository / ".algoviz"),
                     ]

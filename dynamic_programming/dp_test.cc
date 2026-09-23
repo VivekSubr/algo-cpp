@@ -7,6 +7,7 @@
 #include "snakes_and_ladders.h"
 #include "paint_grid.h"
 
+// make visualize FILE=max_subarray.h FUNCTION=minSubArrayWithTarget ALGOVIZ_ARGS='--test TestDP.MinSubArrayWithTarget'
 TEST_F(TestDP, MinSubArrayWithTarget)
 {
 	auto sol1 = minSubArrayWithTarget({2,3,1,2,4,3}, 7);
@@ -18,6 +19,7 @@ TEST_F(TestDP, MinSubArrayWithTarget)
 	ASSERT_EQ(sol2.second, 4);
 }
 
+// make visualize FILE=max_subarray.h FUNCTION=minWindowSubstring ALGOVIZ_ARGS='--test TestDP.MinWindowSubstring'
 TEST_F(TestDP, MinWindowSubstring)
 {
 	ASSERT_EQ(minWindowSubstring("ADOBECODEBANC", "ABC"), "BANC");
@@ -27,6 +29,7 @@ TEST_F(TestDP, MinWindowSubstring)
 	//ASSERT_EQ(minWindowSubstring("ab", "a"), "a");
 }
 
+// make visualize FILE=nqueen.h ALGOVIZ_ARGS='--test TestDP.NQueen'
 TEST_F(TestDP, NQueen)
 {
     std::vector<std::vector<bool>> matrix = 
@@ -87,6 +90,7 @@ TEST_F(TestDP, NQueen)
 	ASSERT_FALSE(checkIfKill(matrix));
 }
 
+// make visualize FILE=jump_game.h ALGOVIZ_ARGS='--test TestDP.JumpGame'
 TEST_F(TestDP, JumpGame)
 {
     ASSERT_TRUE(JumpGame::canJump({2,3,1,1,4}));
@@ -96,6 +100,7 @@ TEST_F(TestDP, JumpGame)
 	ASSERT_EQ(JumpGame::minJumps({2,3,0,1,4}), 2);
 }
 
+// make visualize FILE=best_time_sell_stock.h ALGOVIZ_ARGS='--test TestDP.BestTimeSellStock'
 TEST_F(TestDP, BestTimeSellStock)
 {
 	ASSERT_EQ(BestTimeSell::maxProfit({7,1,5,3,6,4}),  5);
@@ -107,6 +112,7 @@ TEST_F(TestDP, BestTimeSellStock)
 	//ASSERT_EQ(BestTimeSell::maxProfitK(2, {3,2,6,5,0,3}),   7);
 }
 
+// make visualize FILE=word_search.h FUNCTION=WordSearch::exists ALGOVIZ_ARGS='--test TestDP.WordSearch'
 TEST_F(TestDP, WordSearch)
 {
 	std::vector<std::vector<char>> board = {
@@ -118,6 +124,7 @@ TEST_F(TestDP, WordSearch)
 	ASSERT_TRUE(WordSearch::exists(board, "ABCCED"));
 } 
 
+// make visualize FILE=snakes_and_ladders.h FUNCTION=snakesAndLadders ALGOVIZ_ARGS='--test TestDP.SnakesLadders'
 TEST_F(TestDP, SnakesLadders)
 {
 	std::vector<std::vector<int>> board = {
@@ -142,6 +149,7 @@ TEST_F(TestDP, SnakesLadders)
 	ASSERT_EQ(snakesAndLadders(board), 1);
 } 
 
+// make visualize FILE=paint_grid.h FUNCTION=colorTheGrid ALGOVIZ_ARGS='--test TestDP.PaintGrid'
 TEST_F(TestDP, PaintGrid)
 {
 	std::vector<std::tuple<int, int, int>> tests = {

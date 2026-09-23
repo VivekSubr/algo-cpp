@@ -15,6 +15,28 @@ std::pair<int, int> two_sum(std::vector<int> &nums, int target)
     return {-1, -1};
 }
 
+/*
+Alternatively, using hashmap
+std::pair<int, int> twoSum(std::vector<int>& nums, int target) 
+{ 
+    std::unordered_map<int, int> seen; // value -> index
+    for(int i=0; i< nums.size(); i++) seen.insert({nums[i], i});
+
+    for (int i = 0; i < nums.size(); i++) 
+    {
+        int complement = target - nums[i]; //what number we need
+        auto it = seen.find(complement); //is that in map?
+        if (it != seen.end()) 
+        {
+            return {it->second, i};
+        }
+        seen[nums[i]] = i;
+    }
+    return {}; // no pair found
+}
+*/
+
+
 //https://leetcode.com/problems/3sum/
 /*
     Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] 
@@ -36,14 +58,41 @@ std::set<std::tuple<int, int, int>> three_sum(std::vector<int>& nums)
         {
             int sum = nums[i] + nums[j] + nums[k];
             if(sum == 0) ret.insert({nums[i], nums[j], nums[k]});
-            
-            j++;
-            k--;
+
+            if(sum < 0) j++;
+            else        k--;
         }
     }
 
     return ret;
 }
+
+/*
+    Alternatively, using hashmap
+    std::set<std::tuple<int, int, int>> three_sum(std::vector<int>& nums) 
+    {
+        std::unordered_map<int, int> seen; // value -> index
+        for(int i=0; i< nums.size(); i++) seen.insert({nums[i], i});
+
+        std::set<std::tuple<int, int, int>> ret;
+
+        for(std::size_t i=0; i<nums.size(); i++)
+        {
+            for(std::size_t j = i + 1; j < nums.size(); j++)
+            {
+                int complement = -(nums[i] + nums[j]);
+                auto it = seen.find(complement);
+                if(it != seen.end() && it->second != i && it->second != j)
+                {
+                    ret.insert({nums[i], nums[j], complement});
+                }
+            }
+        }
+
+        return ret;
+    }
+
+*/
 
 void max_area()
 {

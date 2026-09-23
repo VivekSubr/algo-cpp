@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+//https://leetcode.com/problems/is-subsequence/description/
 bool is_sub_sequence(const std::string& str, const std::string& sub_str)
 {
     if(sub_str.size() == 0) return true;

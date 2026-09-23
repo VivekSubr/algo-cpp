@@ -13,7 +13,9 @@ struct ListNode
     ListNode(int x, std::shared_ptr<ListNode> next) : val(x), next(next) {}
 };
 
-std::shared_ptr<ListNode> createList(const std::vector<int>& arr)
+using ListNodePtr = std::shared_ptr<ListNode>;
+
+ListNodePtr createList(const std::vector<int>& arr)
 {
     std::shared_ptr<ListNode> head = std::make_shared<ListNode>(arr[0]);
     std::shared_ptr<ListNode> list = head;
@@ -26,7 +28,7 @@ std::shared_ptr<ListNode> createList(const std::vector<int>& arr)
     return head;
 }
 
-bool isEqual(std::shared_ptr<ListNode> list1, std::shared_ptr<ListNode> list2)
+bool isEqual(ListNodePtr list1, ListNodePtr list2)
 {
     while(list1 != nullptr && list2 != nullptr)
     {
@@ -39,7 +41,7 @@ bool isEqual(std::shared_ptr<ListNode> list1, std::shared_ptr<ListNode> list2)
     return list1 == nullptr && list2 == nullptr;
 }
 
-int length(std::shared_ptr<ListNode> list)
+int length(ListNodePtr list)
 {
     int ret = 0;
     while(list != nullptr)
@@ -51,7 +53,7 @@ int length(std::shared_ptr<ListNode> list)
     return ret;
 }
 
-void reverse(std::shared_ptr<ListNode>& list) 
+void reverse(ListNodePtr& list) 
 {
     std::shared_ptr<ListNode> prev    = nullptr;
     std::shared_ptr<ListNode> current = list;
@@ -69,7 +71,7 @@ void reverse(std::shared_ptr<ListNode>& list)
     list = prev;
 }
 
-std::string print_list(std::shared_ptr<ListNode> list)
+std::string print_list(ListNodePtr list)
 {
     std::ostringstream oss;
     while(list != nullptr)
