@@ -17,6 +17,7 @@ htmlcov/
 algoviz-runs/
 
 # Editor and operating-system temporary files
+.vscode/
 *.log
 *.temp
 *.tmp
