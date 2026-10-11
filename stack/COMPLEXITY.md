@@ -64,8 +64,35 @@ One way to solve can be *two pointer*, with the second pointer finding the numbe
 
 Now, the pattern here is *monotonic stack*... the **the stack is a list of "still waiting for an answer" indices**.
 
-Instead of thinking of the stack as holding temperatures, think of it as holding unresolved days — days for which you haven't yet found a warmer future day. You scan left to right. 
+**Important**
+At it's core, the algo is basically,
+```
+    stack = []                      # store indices, not values, when you need position info
+    for i in range(n):
+        while stack and breaks_invariant(nums[stack[-1]], nums[i]):
+            j = stack.pop()
+            answer[j] = i           # or nums[i], or i - j, depending on what's asked
+        stack.append(i)
+    # whatever's left in the stack never found a match — default them (-1, 0, len, etc.)
+```
 
-For each new day: While the new temperature is warmer than the temperature at the index on top of the stack, that top index just got its answer: pop it, and its result is ```current_index - popped_index.```
+So... basically, we have 
+1. stack of days (indices)
+```
+    std::stack<size_t> s
+    for(std::size_t i = 0; i < temperatures.size(); i++)
+```
 
-Once the new temperature is no longer warmer than the top (or the stack is empty), push the current index. It's now a new "unresolved" day, waiting.
+Now, the invariant... "Warmer day than today", ie,
+    ```while(!s.empty() && temp.at(i) > temp.at(s.top()))```
+
+Idea - s.top() is today, ie a day waiting for an answer... pop() when you've found a day warmer than it.
+
+```
+    while(!s.empty() && temp.at(i) > temp.at(s.top()))
+    {
+        ret.at(s.top()) = i - s.top();
+        s.pop();
+    }
+```
+    

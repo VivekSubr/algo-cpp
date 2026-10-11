@@ -67,28 +67,74 @@ First for we don't need to start at leaf node... we simply array the remaining n
 
 Hence, for remaining n/2 elements, swap is done n/2 times... O(n).
 
-## Heap in C++
-There's no std::heap, instead we have std::make_heap that works on any container with random access iterator (std::vector, std::array, std::deque).
+## Recursive vs Non-Recursive
+Tree algos often look intuitively recursive, because of the natural hierachical nature of trees, but can be done non-recursively using stacks or queues, which push and pop up and down the tree.
 
+eg, inverting a tree, recursive
 ```
-std::vector<int> v = {3, 1, 4, 1, 5, 9, 2, 6};
+void invert(TreeNode* root)
+{
+    if(root == nullptr) return;
+        
+    TreeNode* left  = root->left;
+    TreeNode* right = root->right;
 
-std::make_heap(v.begin(), v.end());        // O(n) — arrange into a valid max-heap
-v.push_back(8);
-std::push_heap(v.begin(), v.end());        // O(log n) — sift the new last element up
+    root->left = right;
+    root->right = left;
 
-std::pop_heap(v.begin(), v.end());         // O(log n) — moves max to v.back(), e-heapifies the rest
+    invert(left);
+    invert(right);
+}
 
-v.pop_back();                              // actually remove it
-
-std::sort_heap(v.begin(), v.end());        // O(n log n) — repeated pop_heap; result is sorted, no longer a heap... basically heap sort
+TreeNode* invertTree(TreeNode* root) 
+{
+    invert(root);
+    return root;
+}
 ```
 
-Other than this, we have std::priority_queue, which is again a heap
+Non-recursive DFS, basically pushing in children and poping root.
 ```
-std::priority_queue<int> maxpq;                                      // max-heap
-std::priority_queue<int, std::vector<int>, std::greater<int>> minpq; // min-heap
+TreeNode* invertTree(TreeNode* root)
+{
+    if (root == nullptr) return root;
+
+    std::stack<TreeNode*> stk;
+    stk.push(root);
+
+    while (!stk.empty())
+    {
+        TreeNode* node = stk.top();
+        stk.pop();
+
+        std::swap(node->left, node->right);
+
+        if (node->left)  stk.push(node->left);
+        if (node->right) stk.push(node->right);
+    }
+    return root;
+}
 ```
 
-Used in Djikstra's algo.
+BFS version, level by level
+```
+TreeNode* invertTree(TreeNode* root)
+{
+    if (root == nullptr) return root;
 
+    std::queue<TreeNode*> q;
+    q.push(root);
+
+    while (!q.empty())
+    {
+        TreeNode* node = q.front();
+        q.pop();
+
+        std::swap(node->left, node->right);
+
+        if (node->left)  q.push(node->left);
+        if (node->right) q.push(node->right);
+    }
+    return root;
+}
+```

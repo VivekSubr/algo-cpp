@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Union–Find: Constellations Becoming One</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17223b;
+      --muted: #59657d;
+      --glass: #ffffff;
+      --line: #17223b;
+      --pink: #f45b69;
+      --cyan: #2ec4b6;
+      --gold: #ffbf46;
+      --violet: #6c63ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #f4f1e8;
+    }
+
+    .app {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      width: 100vw;
+      height: 100vh;
+      padding: clamp(18px, 3vw, 42px);
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+    }
+
+    h1 em {
+      color: var(--pink);
+      font-weight: 400;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 15px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      background: var(--glass);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 8px; height: 8px; border-radius: 50%; }
+
+    main {
+      position: relative;
+      min-height: 0;
+      border: 2px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #dff4ef;
+    }
+
+    canvas { display: block; width: 100%; height: 100%; }
+
+    .story {
+      position: absolute;
+      left: clamp(16px, 3vw, 34px);
+      bottom: clamp(16px, 3vw, 30px);
+      width: min(410px, calc(100% - 32px));
+      padding: 18px 20px;
+      border: 2px solid var(--line);
+      border-radius: 19px;
+      background: #ffffff;
+      transition: transform 350ms ease, opacity 350ms ease;
+    }
+
+    .operation {
+      color: var(--gold);
+      font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .story h2 {
+      margin: 7px 0 6px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(20px, 2.4vw, 30px);
+      font-weight: 500;
+    }
+
+    .story p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .rank-card {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 170px;
+      padding: 14px 16px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff8dd;
+      color: var(--muted);
+      font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .rank-card b { color: var(--ink); }
+
+    footer {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+      z-index: 2;
+    }
+
+    button {
+      border: 2px solid var(--line);
+      color: var(--ink);
+      background: #ffffff;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #ffec99;
+    }
+
+    .play {
+      min-width: 118px;
+      padding: 13px 20px;
+      font-weight: 750;
+    }
+
+    .timeline {
+      position: relative;
+      height: 4px;
+      border-radius: 99px;
+      background: #cad2d8;
+      cursor: pointer;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--pink);
+    }
+
+    .steps { display: flex; gap: 7px; }
+    .step {
+      display: grid;
+      place-items: center;
+      width: 31px;
+      height: 31px;
+      padding: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .step.active {
+      color: #100919;
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    @media (max-width: 720px) {
+      .app { padding: 14px; gap: 12px; }
+      .legend, .rank-card { display: none; }
+      footer { grid-template-columns: auto 1fr; }
+      .steps { display: none; }
+      .story { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="eyebrow">A visual algorithm study</div>
+        <h1>Constellations <em>becoming one</em></h1>
+      </div>
+      <div class="legend">
+        <span><i class="swatch" style="color:var(--pink);background:var(--pink)"></i> active</span>
+        <span><i class="swatch" style="color:var(--cyan);background:var(--cyan)"></i> root</span>
+        <span><i class="swatch" style="color:var(--gold);background:var(--gold)"></i> compressed</span>
+      </div>
+    </header>
+
+    <main id="stage">
+      <canvas id="canvas"></canvas>
+      <aside class="rank-card" id="rankCard"></aside>
+      <section class="story" id="story">
+        <div class="operation" id="operation"></div>
+        <h2 id="title"></h2>
+        <p id="description"></p>
+      </section>
+    </main>
+
+    <footer>
+      <button class="play" id="play">Pause</button>
+      <div class="timeline" id="timeline"><div class="progress" id="progress"></div></div>
+      <div class="steps" id="steps"></div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    const stage = document.querySelector("#stage");
+    const playButton = document.querySelector("#play");
+    const timeline = document.querySelector("#timeline");
+    const progress = document.querySelector("#progress");
+    const operation = document.querySelector("#operation");
+    const title = document.querySelector("#title");
+    const description = document.querySelector("#description");
+    const rankCard = document.querySelector("#rankCard");
+    const stepsEl = document.querySelector("#steps");
+
+    const palette = ["#f45b69", "#2ec4b6", "#ffbf46", "#6c63ff", "#62c370", "#ff8c42", "#3a86ff", "#d65db1"];
+    const labels = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    const positions = [
+      [0.18, 0.25], [0.35, 0.18], [0.63, 0.2], [0.82, 0.3],
+      [0.22, 0.68], [0.41, 0.57], [0.66, 0.65], [0.82, 0.72]
+    ];
+
+    const scenes = [
+      {
+        op: "make-set(A … H)",
+        title: "Eight quiet universes",
+        text: "Every element begins as its own parent, root, and complete set. Eight nodes; eight components.",
+        edges: [], active: [], compressed: [], roots: [0,1,2,3,4,5,6,7],
+        parent: [0,1,2,3,4,5,6,7], rank: [0,0,0,0,0,0,0,0]
+      },
+      {
+        op: "union(A, B) · union(C, D)",
+        title: "Gravity finds a direction",
+        text: "Union connects roots. With equal rank, one root adopts the other and grows one level taller.",
+        edges: [[1,0],[3,2]], active: [0,1,2,3], compressed: [], roots: [0,2,4,5,6,7],
+        parent: [0,0,2,2,4,5,6,7], rank: [1,0,1,0,0,0,0,0]
+      },
+      {
+        op: "union(E, F) · union(G, H)",
+        title: "Pairs become small galaxies",
+        text: "The same ritual repeats. Four components remain, each represented by a root.",
+        edges: [[1,0],[3,2],[5,4],[7,6]], active: [4,5,6,7], compressed: [], roots: [0,2,4,6],
+        parent: [0,0,2,2,4,4,6,6], rank: [1,0,1,0,1,0,1,0]
+      },
+      {
+        op: "union(B, D)",
+        title: "Find the roots first",
+        text: "B traces to A; D traces to C. Only roots are joined. Equal ranks make A the new representative.",
+        edges: [[1,0],[3,2],[2,0],[5,4],[7,6]], active: [1,3,0,2], compressed: [], roots: [0,4,6],
+        parent: [0,0,0,2,4,4,6,6], rank: [2,0,1,0,1,0,1,0]
+      },
+      {
+        op: "union(F, H)",
+        title: "Balanced trees stay shallow",
+        text: "Union by rank attaches one tree beneath another. Height grows only when equally ranked roots meet.",
+        edges: [[1,0],[3,2],[2,0],[5,4],[7,6],[6,4]], active: [5,7,4,6], compressed: [], roots: [0,4],
+        parent: [0,0,0,2,4,4,4,6], rank: [2,0,1,0,2,0,1,0]
+      },
+      {
+        op: "union(D, H)",
+        title: "Two worlds become one",
+        text: "Their roots have equal rank. A absorbs E's tree, becoming the single representative of every element.",
+        edges: [[1,0],[3,2],[2,0],[5,4],[7,6],[6,4],[4,0]], active: [3,7,0,4], compressed: [], roots: [0],
+        parent: [0,0,0,2,0,4,4,6], rank: [3,0,1,0,2,0,1,0]
+      },
+      {
+        op: "find(H)",
+        title: "Follow the thread home",
+        text: "H walks H → G → E → A. Find returns A—and remembers every node encountered on the journey.",
+        edges: [[1,0],[3,2],[2,0],[5,4],[7,6],[6,4],[4,0]], active: [7,6,4,0], compressed: [], roots: [0],
+        parent: [0,0,0,2,0,4,4,6], rank: [3,0,1,0,2,0,1,0]
+      },
+      {
+        op: "path compression",
+        title: "The path folds into light",
+        text: "H, G, and E now point directly to A. Future finds are almost immediate—the secret behind near-constant time.",
+        edges: [[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0]], active: [7,6,4,0], compressed: [7,6,4], roots: [0],
+        parent: [0,0,0,0,0,0,0,0], rank: [3,0,1,0,2,0,1,0]
+      }
+    ];
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let sceneIndex = 0;
+    let previousScene = 0;
+    let sceneStarted = performance.now();
+    let pausedAt = 0;
+    let playing = true;
+    const sceneDuration = 4300;
+    const transitionDuration = 1100;
+
+    scenes.forEach((_, i) => {
+      const button = document.createElement("button");
+      button.className = "step";
+      button.textContent = i + 1;
+      button.title = scenes[i].op;
+      button.addEventListener("click", () => setScene(i));
+      stepsEl.append(button);
+    });
+
+    function resize() {
+      const rect = stage.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function setScene(index) {
+      previousScene = sceneIndex;
+      sceneIndex = (index + scenes.length) % scenes.length;
+      sceneStarted = performance.now();
+      updateCopy();
+    }
+
+    function updateCopy() {
+      const scene = scenes[sceneIndex];
+      operation.textContent = scene.op;
+      title.textContent = scene.title;
+      description.textContent = scene.text;
+      rankCard.innerHTML =
+        `<b>parent[]</b><br>${scene.parent.join("  ")}<br>` +
+        `<b>rank[]</b><br>${scene.rank.join("  ")}`;
+      [...stepsEl.children].forEach((el, i) => el.classList.toggle("active", i === sceneIndex));
+    }
+
+    function nodePoint(index, time) {
+      const [px, py] = positions[index];
+      const safeTop = height < 500 ? 24 : 35;
+      const safeBottom = height < 500 ? 110 : 80;
+      const areaHeight = Math.max(200, height - safeTop - safeBottom);
+      return {
+        x: width * px,
+        y: safeTop + areaHeight * py
+      };
+    }
+
+    function ease(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function edgeKey(edge) { return `${edge[0]}-${edge[1]}`; }
+
+    function drawBackground(time) {
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = "rgba(23, 34, 59, 0.08)";
+      ctx.lineWidth = 1;
+      const spacing = 36;
+      const offset = (time * 0.006) % spacing;
+      for (let x = -spacing + offset; x < width + spacing; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = -spacing + offset; y < height + spacing; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawEdge(from, to, color, alpha, amount = 1, widthPx = 2) {
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const end = { x: from.x + dx * amount, y: from.y + dy * amount };
+      ctx.strokeStyle = color.replace(")", `, ${alpha})`).replace("rgb", "rgba");
+      ctx.lineWidth = widthPx;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+
+      if (amount > 0.92) {
+        const angle = Math.atan2(dy, dx);
+        const arrow = 8;
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.beginPath();
+        ctx.moveTo(end.x, end.y);
+        ctx.lineTo(end.x - arrow * Math.cos(angle - 0.45), end.y - arrow * Math.sin(angle - 0.45));
+        ctx.lineTo(end.x - arrow * Math.cos(angle + 0.45), end.y - arrow * Math.sin(angle + 0.45));
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    function hexToRgb(hex) {
+      const value = parseInt(hex.slice(1), 16);
+      return `rgb(${value >> 16}, ${(value >> 8) & 255}, ${value & 255})`;
+    }
+
+    function drawNode(index, point, scene, time) {
+      const active = scene.active.includes(index);
+      const root = scene.roots.includes(index);
+      const compressed = scene.compressed.includes(index);
+      const base = palette[index];
+      const pulse = active ? 1 + Math.sin(time * 0.007 + index) * 0.07 : 1;
+      const radius = (root ? 25 : 21) * pulse;
+      const outline = compressed ? "#ff9f1c" : active ? "#f45b69" : "#17223b";
+
+      if (active) {
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, radius + 7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = compressed ? "#ffbf46" : root ? "#2ec4b6" : base;
+      ctx.strokeStyle = outline;
+      ctx.lineWidth = root || active ? 4 : 2;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#17223b";
+      ctx.font = `700 ${root ? 15 : 13}px ui-monospace, monospace`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(labels[index], point.x, point.y + 0.5);
+
+      if (root) {
+        ctx.fillStyle = "#17223b";
+        ctx.font = "700 9px ui-monospace, monospace";
+        ctx.fillText("ROOT", point.x, point.y + radius + 14);
+      }
+    }
+
+    function render(time) {
+      if (playing && time - sceneStarted >= sceneDuration) {
+        setScene(sceneIndex + 1);
+      }
+
+      const elapsed = playing ? time - sceneStarted : pausedAt;
+      const transition = ease(Math.min(1, elapsed / transitionDuration));
+      const scene = scenes[sceneIndex];
+      const previous = scenes[previousScene];
+      const points = labels.map((_, i) => nodePoint(i, time));
+
+      drawBackground(time);
+
+      const currentEdges = new Set(scene.edges.map(edgeKey));
+      const oldEdges = new Set(previous.edges.map(edgeKey));
+
+      previous.edges.forEach(edge => {
+        if (!currentEdges.has(edgeKey(edge))) {
+          drawEdge(points[edge[0]], points[edge[1]], hexToRgb(palette[edge[0]]), 0.24 * (1 - transition), 1, 1.5);
+        }
+      });
+
+      scene.edges.forEach(edge => {
+        const isNew = !oldEdges.has(edgeKey(edge));
+        const source = edge[0];
+        const isCompressed = scene.compressed.includes(source);
+        const color = isCompressed ? "#ffd166" : palette[source];
+        drawEdge(
+          points[edge[0]],
+          points[edge[1]],
+          hexToRgb(color),
+          isCompressed ? 0.9 : 0.58,
+          isNew ? transition : 1,
+          isCompressed ? 3.3 : 2
+        );
+      });
+
+      labels.forEach((_, i) => drawNode(i, points[i], scene, time));
+
+      progress.style.width = `${((sceneIndex + Math.min(1, elapsed / sceneDuration)) / scenes.length) * 100}%`;
+      requestAnimationFrame(render);
+    }
+
+    playButton.addEventListener("click", () => {
+      playing = !playing;
+      if (playing) {
+        sceneStarted = performance.now() - pausedAt;
+      } else {
+        pausedAt = performance.now() - sceneStarted;
+      }
+      playButton.textContent = playing ? "Pause" : "Play";
+    });
+
+    timeline.addEventListener("click", event => {
+      const rect = timeline.getBoundingClientRect();
+      setScene(Math.min(scenes.length - 1, Math.floor(((event.clientX - rect.left) / rect.width) * scenes.length)));
+    });
+
+    window.addEventListener("resize", resize);
+    resize();
+    updateCopy();
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

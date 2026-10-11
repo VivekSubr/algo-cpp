@@ -4,6 +4,7 @@
     #include "bst.h"   
     #include "heap.h"
     #include "b_tree.h"
+    #include "trie.h"
 #undef private
 #include "tree_test.h"
 using namespace testing;
@@ -116,4 +117,20 @@ TEST_F(TestTree, BTree)
 
     BTree<int> tree(arr, 3);
     tree.printTree();
+}
+
+TEST_F(TestTree, Trie)
+{
+    Trie trie({"apple", "app", "banana"});
+    trie.addWord("apricot");
+    ASSERT_TRUE(trie.find("apple"));
+    ASSERT_TRUE(trie.find("app"));
+    ASSERT_TRUE(trie.find("banana"));
+    ASSERT_TRUE(trie.find("apricot"));
+    ASSERT_FALSE(trie.find("pear"));
+
+    auto prefixResult = trie.prefix("ap");
+    std::vector<std::string> expectedPrefix = {"apple", "app", "apricot"};
+    ASSERT_EQ(prefixResult.size(), expectedPrefix.size());
+    for(std::size_t i=0; i<prefixResult.size(); i++) { ASSERT_EQ(prefixResult[i], expectedPrefix[i]); }
 }
